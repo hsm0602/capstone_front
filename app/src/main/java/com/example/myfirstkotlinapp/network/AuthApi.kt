@@ -7,6 +7,8 @@ import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
+import retrofit2.http.PATCH
+import retrofit2.http.Query
 
 interface AuthApi {
     @FormUrlEncoded
@@ -18,6 +20,14 @@ interface AuthApi {
 
     @POST("/signup")
     suspend fun signup(@Body signupRequest: SignupRequestDto): Response<SignupResponse>
+
+    @PATCH("goal/goal_state")
+    suspend fun patchGoalState(
+        @Query("user_id") userId: Int,
+        @Query("height") height: Float,
+        @Query("weight") weight: Float,
+        @Query("pbf") pbf: Float
+    ): Response<Void>
 }
 
 data class TokenResponse(
