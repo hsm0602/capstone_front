@@ -18,7 +18,7 @@ import com.example.myfirstkotlinapp.network.RetrofitClient
 
 
 @Composable
-fun SignupScreen(onSignupSuccess: () -> Unit) {
+fun SignupScreen(onSignupSuccess: (Int) -> Unit) {
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -68,8 +68,11 @@ fun SignupScreen(onSignupSuccess: () -> Unit) {
                         val request = SignupRequestDto(username, email, password)
                         val response = RetrofitClient.authApi.signup(request)
                         if (response.isSuccessful) {
-                            Toast.makeText(context, "회원가입 성공!", Toast.LENGTH_SHORT).show()
-                            onSignupSuccess()
+                            val body = response.body()
+                            if (body != null) {
+                                Toast.makeText(context, "회원가입 성공!", Toast.LENGTH_SHORT).show()
+                                onSignupSuccess(body.id)
+                            }
                         } else {
                             Toast.makeText(context, "회원가입 실패: ${response.code()}", Toast.LENGTH_SHORT).show()
                         }

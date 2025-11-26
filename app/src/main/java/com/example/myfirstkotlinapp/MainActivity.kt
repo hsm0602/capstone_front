@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.example.myfirstkotlinapp.ui.screen.MainScreen
 import com.example.myfirstkotlinapp.ui.theme.MyFirstKotlinAppTheme
-import com.example.myfirstkotlinapp.ui.screen.RoutineEditScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
