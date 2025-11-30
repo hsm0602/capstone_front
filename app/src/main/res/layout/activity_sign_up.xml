@@ -35,7 +35,7 @@
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="회원가입"
+        android:text="새계정"
         android:textSize="26sp"
         android:textStyle="bold"
         android:textColor="#5A68FF"
@@ -69,7 +69,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- 이름 -->
+        <!-- ▫ 이름 라벨 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="이름"
+            android:textColor="#666A73"
+            android:textSize="14sp"
+            android:layout_marginBottom="6dp"/>
+
+        <!-- ▫ 이름 입력 박스 -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="56dp"
@@ -82,14 +91,27 @@
                 android:id="@+id/etName"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:hint="이름"
+                android:background="@android:color/transparent"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:hint="이름을 입력하세요"
                 android:textColor="#738CFF"
+                android:textColorHint="#B0B6FF"
                 android:textSize="16sp"
-                android:inputType="textPersonName"/>
+                android:inputType="textPersonName" />
         </androidx.cardview.widget.CardView>
 
-        <!-- 이메일 -->
+        <!-- ▫ 이메일 라벨 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="이메일"
+            android:textColor="#666A73"
+            android:textSize="14sp"
+            android:layout_marginBottom="6dp"/>
+
+        <!-- ▫ 이메일 입력 박스 -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="56dp"
@@ -102,14 +124,27 @@
                 android:id="@+id/etEmail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:hint="이메일"
+                android:background="@android:color/transparent"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:hint="example@example.com"
                 android:textColor="#738CFF"
+                android:textColorHint="#B0B6FF"
                 android:textSize="16sp"
                 android:inputType="textEmailAddress"/>
         </androidx.cardview.widget.CardView>
 
-        <!-- 비밀번호 -->
+        <!-- ▫ 비밀번호 라벨 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="비밀번호"
+            android:textColor="#666A73"
+            android:textSize="14sp"
+            android:layout_marginBottom="6dp"/>
+
+        <!-- ▫ 비밀번호 입력 박스 (+ 힌트 문구) -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="56dp"
@@ -121,29 +156,34 @@
                 android:id="@+id/etPassword"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:hint="비밀번호"
+                android:background="@android:color/transparent"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:hint="영문, 숫자, 특수문자 포함 8자 이상"
                 android:textColor="#738CFF"
+                android:textColorHint="#B0B6FF"
                 android:textSize="16sp"
                 android:inputType="textPassword"/>
         </androidx.cardview.widget.CardView>
 
     </LinearLayout>
 
-    <!-- 🔹 회원가입 버튼 -->
+
+    <!-- 회원가입 버튼 -->
     <androidx.cardview.widget.CardView
         android:id="@+id/btnSignUp"
-        android:layout_width="140dp"
+        android:layout_width="0dp"
         android:layout_height="55dp"
-        android:layout_marginBottom="280dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="30dp"
         app:cardCornerRadius="28dp"
         app:cardBackgroundColor="#4A64FF"
         app:cardElevation="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/loginArea">
 
         <TextView
             android:layout_width="match_parent"
@@ -152,7 +192,38 @@
             android:text="회원가입"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
     </androidx.cardview.widget.CardView>
+
+    <!-- 이미 계정이 있으신가요? 로그인 -->
+    <LinearLayout
+        android:id="@+id/loginArea"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="160dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="이미 계정이 있으신가요?"
+            android:textSize="13sp"
+            android:textColor="#8F959D" />
+
+        <TextView
+            android:id="@+id/tvGoLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" 로그인"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="#4A64FF"
+            android:clickable="true"
+            android:focusable="true" />
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
