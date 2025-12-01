@@ -44,6 +44,7 @@ dependencies {
 
     // 기본 라이브러리
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.compose.ui.viewbinding)
     //implementation(libs.androidx.lifecycle.runtime.ktx)
 
     // 추가: Lifecycle Compose 통합 라이브러리

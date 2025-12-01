@@ -36,6 +36,10 @@
         <activity android:name=".LoginActivity"
             android:windowSoftInputMode="adjustResize"/>
 
+        <!-- 설문2 -->
+        <activity android:name=".SurvayActivity"
+            android:windowSoftInputMode="adjustResize"/>
+
         <!-- SignupActivity 추가 -->
         <activity android:name=".SignupActivity" />
 
