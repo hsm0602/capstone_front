@@ -5,6 +5,7 @@ import com.example.myfirstkotlinapp.ui.model.ExerciseRecordCreateDto
 import com.example.myfirstkotlinapp.ui.model.ExerciseRecordUpdateDto
 import com.example.myfirstkotlinapp.ui.model.PostRecordResponse
 import com.example.myfirstkotlinapp.ui.model.UserDto
+import com.example.myfirstkotlinapp.ui.model.ExerciseRecordDto
 import retrofit2.http.GET
 import retrofit2.http.Query
 import retrofit2.http.Body
@@ -33,6 +34,12 @@ interface ExerciseApi {
         @Body data: ExerciseRecordUpdateDto
     )
 
-    @GET("/users/me")
+    @GET("users/me")
     suspend fun getCurrentUser(): UserDto
+
+    @GET("exercise/records")
+    suspend fun getExerciseRecord(
+        @Query("user_id") userId: Int,
+        @Query("date") date: String   // today: "yyyy-MM-dd"
+    ): List<ExerciseRecordDto>
 }

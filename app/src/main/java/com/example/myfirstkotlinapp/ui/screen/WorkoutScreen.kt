@@ -12,11 +12,9 @@ import com.example.myfirstkotlinapp.ui.model.ExercisePlan
 
 @Composable
 fun WorkoutScreen() {
-    var isEditingRoutine by remember { mutableStateOf(false) }  // 운동 계획을 설정할지 말지
     var isDoingWorkout by remember { mutableStateOf(false) }     // 운동을 진행할지 말지
     var isResting by remember { mutableStateOf(false) }
     var isWorkoutComplete by remember { mutableStateOf(false) }
-    var selectedParts by remember { mutableStateOf<List<String>>(emptyList()) } // 선택된 부위
     var selectedPlans by remember { mutableStateOf<List<ExercisePlan>>(emptyList()) } // 운동 계획 리스트
     var recordIds by remember { mutableStateOf<List<Int>>(emptyList()) }
 
@@ -38,12 +36,10 @@ fun WorkoutScreen() {
             WorkoutCompleteScreen(
                 sessionManager = sessionManager,
                 onFinish = {
-                    isEditingRoutine = false
                     isDoingWorkout = false
                     isResting = false
                     isWorkoutComplete = false
                     selectedPlans = emptyList()
-                    selectedParts = emptyList()
                     recordIds = emptyList()
                 }
             )
@@ -91,23 +87,13 @@ fun WorkoutScreen() {
                 }
             )
         }
-        isEditingRoutine -> { // 운동 계획 설정 중일 때
-            RoutineEditScreen(
-                selectedBodyParts = selectedParts,
-                onStartWorkout = { plans, ids ->
-                    // 운동 계획이 설정되면 운동 시작
-                    selectedPlans = plans
-                    recordIds = ids
-                    isDoingWorkout = true
-                }
-            )
-        }
 
         else -> { // 운동 부위 선택 화면
-            BodyPartSelectionScreen(
-                onStartRoutine = { selected ->
-                    selectedParts = selected // 부위 선택 저장
-                    isEditingRoutine = true   // 운동 계획 설정 화면으로 이동
+            HomeScreen(
+                onStartWorkout = { plans, ids ->
+                    selectedPlans = plans // 부위 선택 저장
+                    recordIds = ids   // 운동 계획 설정 화면으로 이동
+                    isDoingWorkout = true
                 }
             )
         }
