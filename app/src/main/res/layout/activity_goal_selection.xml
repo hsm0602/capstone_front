@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootGoalSelection"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <!-- 상단 연한 파란 바 (상태바 영역 느낌) -->
+    <View
+        android:id="@+id/statusBarBg"
+        android:layout_width="0dp"
+        android:layout_height="28dp"
+        android:background="#E2EAFF"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- 뒤로가기 버튼 (일단 안드로이드 기본 아이콘 사용) -->
+    <ImageButton
+        android:id="@+id/btnBackFromGoal"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:background="@android:color/transparent"
+        android:padding="4dp"
+        android:src="@android:drawable/ic_media_previous"
+        android:contentDescription="뒤로가기"
+        app:layout_constraintTop_toBottomOf="@id/statusBarBg"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- 상단 타이틀: 목표 설정 -->
+    <TextView
+        android:id="@+id/tvGoalToolbarTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="목표 설정"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#2260FF"
+        app:layout_constraintTop_toBottomOf="@id/statusBarBg"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5" />
+
+    <!-- 메인 타이틀: 목표 선택 -->
+    <TextView
+        android:id="@+id/tvGoalMainTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:text="목표 선택"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:textColor="#303437"
+        app:layout_constraintTop_toBottomOf="@id/tvGoalToolbarTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5" />
+
+    <!-- 목표 선택 버튼 3개 -->
+    <LinearLayout
+        android:id="@+id/layoutGoalButtons"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="23dp"
+        android:layout_marginEnd="23dp"
+        android:layout_marginTop="40dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/tvGoalMainTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <Button
+            android:id="@+id/btnGoalFatLoss"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_goal_button"
+            android:text="체지방 감소 및 다이어트"
+            android:textColor="#FAFAFB"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnGoalMuscleGain"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_goal_button"
+            android:text="근육량 및 근력 증가"
+            android:textColor="#FAFAFB"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnGoalEndurance"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_goal_button"
+            android:text="근지구력 향상"
+            android:textColor="#FAFAFB"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

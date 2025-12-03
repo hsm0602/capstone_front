@@ -9,6 +9,7 @@ import com.example.myfirstkotlinapp.ui.model.ExerciseRecordDto
 import retrofit2.http.GET
 import retrofit2.http.Query
 import retrofit2.http.Body
+import retrofit2.http.Header
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -27,6 +28,12 @@ interface ExerciseApi {
         @Path("exercise_id") exerciseId: Int,
         @Body record: ExerciseRecordCreateDto
     ): PostRecordResponse
+
+    @POST("user/goal")
+    suspend fun setGoal(
+        @Query("user_id") userId: Int,
+        @Query("goal") goal: String
+    ): Response<Void>
 
     @PATCH("exercise_records/{record_id}")
     suspend fun patchExerciseRecord(
