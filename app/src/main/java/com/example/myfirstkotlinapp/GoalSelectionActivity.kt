@@ -18,21 +18,31 @@ class GoalSelectionActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // 회원가입에서 넘겨줄 예정인 토큰 (지금은 null이어도 컴파일에는 문제 없음)
-        val accessToken = intent.getStringExtra("access_token")
+        // ✅ 회원가입에서 넘겨준 userId 받기
+        //   → SignupActivity 에서 putExtra("userId", userId) 로 넣어줘야 함
+        val userId = intent.getIntExtra("userId", -1)
+
+        if (userId == -1) {
+            Toast.makeText(this, "userId 가 전달되지 않았습니다.", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
 
         setContent {
             MyFirstKotlinAppTheme {
                 GoalSelectionXmlScreen(
-                    accessToken = accessToken,
-                    onGoalSelectedAndSaved = { selectedGoal: String ->
-                        // ▶ 목표 저장 후 "현재 상태" 화면으로 이동
+                    userId = userId,
+                    onGoalSelectedAndSaved = { userId ->
+                        // ✅ 목표까지 서버에 저장이 끝난 뒤에만 다음 화면으로 이동
+                        //    다음 화면 이름은 팀에서 정한 Activity 로 교체
                         val next = Intent(
                             this@GoalSelectionActivity,
-                            CurrentStatusActivity::class.java
+                            CurrentStatusActivity::class.java   // TODO: 실제 액티비티 이름으로 변경
                         )
+                        next.putExtra("userId", userId)
+                        // 굳이 goal 이나 userId 를 들고 다닐 필요 없으면 extra 안 넣어도 됨
                         startActivity(next)
-                        finish()
+                        finish()  // 이 화면은 스택에서 제거
                     }
                 )
             }
@@ -42,34 +52,32 @@ class GoalSelectionActivity : ComponentActivity() {
 
 @Composable
 fun GoalSelectionXmlScreen(
-    accessToken: String?,
-    onGoalSelectedAndSaved: (String) -> Unit,
+    userId: Int,
+    onGoalSelectedAndSaved: (Int) -> Unit,
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
+
     AndroidViewBinding(ActivityGoalSelectionBinding::inflate) {
 
-        // 뒤로가기
+        // ⬅️ 뒤로가기
         btnBackFromGoal.setOnClickListener {
             (context as? GoalSelectionActivity)?.finish()
-
-
         }
 
+        // 공통 클릭 처리 함수: goalString 하나만 다르게 넣어줌
         fun handleClick(goalString: String) {
             coroutineScope.launch {
                 try {
-                    // 1) 서버에 goalString 전송
-                    val api = RetrofitClient.exerciseApi
-                    val response = api.setGoal(
-                        token = "Bearer $accessToken",
-                        goal = goalString,
-                        userId = ?
+                    // ✅ 여기서 userId + goalString 을 ExerciseApi 로 전송
+                    val response = RetrofitClient.exerciseApi.setGoal(
+                        userId = userId,
+                        goal = goalString
                     )
 
                     if (response.isSuccessful) {
-                        // 2) 성공 시 콜백 호출 → 상위에서 다음 Activity로 이동
-                        onGoalSelectedAndSaved(goalString)
+                        // ✅ 서버에 정상 저장되었으니 상위 콜백 호출 → 다음 화면으로 이동
+                        onGoalSelectedAndSaved(userId)
                     } else {
                         Toast.makeText(
                             context,
@@ -87,9 +95,9 @@ fun GoalSelectionXmlScreen(
             }
         }
 
-        // 버튼 3개 클릭 시 각각 다른 코드값 전송
-        btnGoalFatLoss.setOnClickListener { handleClick("FAT_LOSS") }
+        // ⬇️ 3개 버튼 각각에서 다른 goalString 만 넘겨줌
+        btnGoalFatLoss.setOnClickListener   { handleClick("FAT_LOSS") }
         btnGoalMuscleGain.setOnClickListener { handleClick("MUSCLE_GAIN") }
-        btnGoalEndurance.setOnClickListener { handleClick("ENDURANCE") }
+        btnGoalEndurance.setOnClickListener  { handleClick("ENDURANCE") }
     }
 }
