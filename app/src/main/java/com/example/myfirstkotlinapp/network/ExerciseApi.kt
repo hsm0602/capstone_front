@@ -29,12 +29,6 @@ interface ExerciseApi {
         @Body record: ExerciseRecordCreateDto
     ): PostRecordResponse
 
-    @POST("user/goal")
-    suspend fun setGoal(
-        @Query("user_id") userId: Int,
-        @Query("goal") goal: String
-    ): Response<Void>
-
     @PATCH("exercise_records/{record_id}")
     suspend fun patchExerciseRecord(
         @Path("record_id") recordId: Int,

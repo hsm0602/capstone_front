@@ -55,8 +55,11 @@
 
         <activity
             android:name=".GoalSelectionActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
+            android:exported="false" />
+
+        <activity
+            android:name=".GoalSettingActivity"
+            android:exported="false" />
 
     </application>
 
