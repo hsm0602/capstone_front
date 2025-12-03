@@ -36,7 +36,7 @@ class GoalSettingActivity : ComponentActivity() {
                     userId = userId,
                     onUpdateSuccess = { userId ->
                         // ✅ 서버 저장 성공 후 홈(MainActivity)으로 이동
-                        val intent = Intent(this@GoalSettingActivity, MainActivity::class.java)
+                        val intent = Intent(this@GoalSettingActivity, SurveyActivity::class.java)
                         intent.putExtra("userId", userId)
                         startActivity(intent)
                         // 현재 화면은 스택에서 제거
@@ -58,7 +58,7 @@ fun GoalSettingXmlScreen(
         // this = ActivityGoalSettingBinding
 
         // 뒤로가기
-        tvBack.setOnClickListener {
+        backBtn.setOnClickListener {
             onBack()
         }
 

@@ -61,7 +61,7 @@ fun GoalSelectionXmlScreen(
     AndroidViewBinding(ActivityGoalSelectionBinding::inflate) {
 
         // ⬅️ 뒤로가기
-        btnBackFromGoal.setOnClickListener {
+        backBtn.setOnClickListener {
             (context as? GoalSelectionActivity)?.finish()
         }
 
