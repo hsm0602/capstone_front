@@ -15,77 +15,61 @@ import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 import com.example.myfirstkotlinapp.ui.model.SignupRequestDto
 import com.example.myfirstkotlinapp.network.RetrofitClient
+import com.example.myfirstkotlinapp.databinding.ActivitySignUpBinding
+import androidx.compose.ui.viewinterop.AndroidViewBinding
+import android.app.Activity
 
 
 @Composable
 fun SignupScreen(onSignupSuccess: (Int) -> Unit) {
-    var username by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text("회원가입", fontSize = 24.sp)
+    AndroidViewBinding(ActivitySignUpBinding::inflate) {
 
-        OutlinedTextField(
-            value = username,
-            onValueChange = { username = it },
-            label = { Text("이름") },
-            modifier = Modifier.fillMaxWidth()
-        )
+        tvBack.setOnClickListener {
+            (context as? Activity)?.finish()
+        }
 
-        OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("이메일") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp)
-        )
+        btnSignUp.setOnClickListener {
+            val username = etName.text.toString().trim()
+            val email = etEmail.text.toString().trim()
+            val password = etPassword.text.toString().trim()
 
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("비밀번호") },
-            visualTransformation = PasswordVisualTransformation(),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp)
-        )
+            if (username.isBlank() || email.isBlank() || password.isBlank()) {
+                Toast.makeText(context, "모든 값을 입력해주세요.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
 
-        Button(
-            onClick = {
-                coroutineScope.launch {
-                    try {
-                        val request = SignupRequestDto(username, email, password)
-                        val response = RetrofitClient.authApi.signup(request)
-                        if (response.isSuccessful) {
-                            val body = response.body()
-                            if (body != null) {
-                                Toast.makeText(context, "회원가입 성공!", Toast.LENGTH_SHORT).show()
-                                onSignupSuccess(body.id)
-                            }
+            coroutineScope.launch {
+                try {
+                    val request = SignupRequestDto(username, email, password)
+                    val response = RetrofitClient.authApi.signup(request)
+
+                    if (response.isSuccessful) {
+                        val body = response.body()
+                        if (body != null) {
+                            Toast.makeText(context, "회원가입 성공!", Toast.LENGTH_SHORT).show()
+                            onSignupSuccess(body.id)
                         } else {
-                            Toast.makeText(context, "회원가입 실패: ${response.code()}", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "응답이 비어 있습니다.", Toast.LENGTH_SHORT).show()
                         }
-                    } catch (e: Exception) {
-                        Toast.makeText(context, "에러: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "회원가입 실패: ${response.code()}",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
+                } catch (e: Exception) {
+                    Toast.makeText(
+                        context,
+                        "에러: ${e.localizedMessage}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 24.dp)
-        ) {
-            Text("회원가입", color = Color.White)
+            }
         }
     }
 }
+
