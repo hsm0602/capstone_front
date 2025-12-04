@@ -312,43 +312,37 @@
                         android:padding="24dp"
                         android:layout_marginBottom="16dp">
 
-                        <ImageView
-                            android:id="@+id/iv_exercise_image_1"
-                            android:layout_width="96dp"
-                            android:layout_height="96dp"
-                            android:layout_marginEnd="12dp"
-                            android:scaleType="centerCrop"
-                            android:contentDescription="@string/app_name" />
 
+                        <TextView
+                            android:id="@+id/tv_exercise_title_1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="버피 - burpee"
+                            android:textColor="#202325"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:layout_marginRight="40dp"/>
                         <!-- 오른쪽 정보 영역 -->
                         <LinearLayout
-                            android:layout_width="0dp"
+                            android:layout_width="119dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/tv_exercise_title_1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="버피 - burpee"
-                                android:textSize="16sp"
-                                android:textStyle="bold"
-                                android:textColor="#202325" />
 
                             <!-- 회수 x 세트 -->
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
-                                android:orientation="horizontal"
-                                android:gravity="center_vertical">
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
 
                                 <ImageView
                                     android:id="@+id/iv_loop_icon_1"
                                     android:layout_width="17dp"
                                     android:layout_height="17dp"
-                                    android:contentDescription="@string/app_name" />
+                                    android:contentDescription="@string/app_name"
+                                    android:src="@drawable/ic_loop" />
 
                                 <TextView
                                     android:id="@+id/tv_exercise_set_info_1"
@@ -356,8 +350,8 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="8dp"
                                     android:text="15회 X 3세트"
-                                    android:textSize="12sp"
-                                    android:textColor="#202325" />
+                                    android:textColor="#202325"
+                                    android:textSize="12sp" />
                             </LinearLayout>
 
                             <!-- 진행도 바(3칸 중 2칸 채워진 느낌) -->
@@ -391,8 +385,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
-                                android:orientation="horizontal"
-                                android:gravity="center_vertical">
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
 
                                 <ImageView
                                     android:id="@+id/iv_remove_icon_1"
@@ -406,8 +400,8 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="8dp"
                                     android:text="2 / 3"
-                                    android:textSize="12sp"
-                                    android:textColor="#000000" />
+                                    android:textColor="#000000"
+                                    android:textSize="12sp" />
                             </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
@@ -421,14 +415,15 @@
                         android:background="@drawable/rounded_24_2"
                         android:padding="24dp"
                         android:layout_marginBottom="16dp">
-
-                        <ImageView
-                            android:id="@+id/iv_exercise_image_2"
-                            android:layout_width="96dp"
-                            android:layout_height="96dp"
-                            android:layout_marginEnd="12dp"
-                            android:scaleType="centerCrop"
-                            android:contentDescription="@string/app_name" />
+                        <TextView
+                            android:id="@+id/tv_exercise_title_2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="버피 - burpee"
+                            android:textColor="#202325"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:layout_marginRight="40dp"/>
 
                         <!-- 오른쪽 정보 영역 -->
                         <LinearLayout
@@ -436,15 +431,6 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/tv_exercise_title_2"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="버피 - burpee"
-                                android:textSize="16sp"
-                                android:textStyle="bold"
-                                android:textColor="#202325" />
 
                             <!-- 회수 x 세트 -->
                             <LinearLayout
@@ -458,7 +444,8 @@
                                     android:id="@+id/iv_loop_icon_2"
                                     android:layout_width="17dp"
                                     android:layout_height="17dp"
-                                    android:contentDescription="@string/app_name" />
+                                    android:contentDescription="@string/app_name"
+                                    android:src="@drawable/ic_loop"/>
 
                                 <TextView
                                     android:id="@+id/tv_exercise_set_info_2"
@@ -532,13 +519,16 @@
                         android:padding="24dp"
                         android:layout_marginBottom="16dp">
 
-                        <ImageView
-                            android:id="@+id/iv_exercise_image_3"
-                            android:layout_width="96dp"
-                            android:layout_height="96dp"
-                            android:layout_marginEnd="12dp"
-                            android:scaleType="centerCrop"
-                            android:contentDescription="@string/app_name" />
+                        <TextView
+                            android:id="@+id/tv_exercise_title_3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="버피 - burpee"
+                            android:textColor="#202325"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:layout_marginRight="40dp"/>
+
 
                         <!-- 오른쪽 정보 영역 -->
                         <LinearLayout
@@ -546,15 +536,6 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/tv_exercise_title_3"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="버피 - burpee"
-                                android:textSize="16sp"
-                                android:textStyle="bold"
-                                android:textColor="#202325" />
 
                             <!-- 회수 x 세트 -->
                             <LinearLayout
@@ -568,7 +549,8 @@
                                     android:id="@+id/iv_loop_icon_3"
                                     android:layout_width="17dp"
                                     android:layout_height="17dp"
-                                    android:contentDescription="@string/app_name" />
+                                    android:contentDescription="@string/app_name"
+                                    android:src="@drawable/ic_loop"/>
 
                                 <TextView
                                     android:id="@+id/tv_exercise_set_info_3"
@@ -642,13 +624,16 @@
                         android:padding="24dp"
                         android:layout_marginBottom="16dp">
 
-                        <ImageView
-                            android:id="@+id/iv_exercise_image_4"
-                            android:layout_width="96dp"
-                            android:layout_height="96dp"
-                            android:layout_marginEnd="12dp"
-                            android:scaleType="centerCrop"
-                            android:contentDescription="@string/app_name" />
+                        <TextView
+                            android:id="@+id/tv_exercise_title_4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="버피 - burpee"
+                            android:textColor="#202325"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:layout_marginRight="40dp"/>
+
 
                         <!-- 오른쪽 정보 영역 -->
                         <LinearLayout
@@ -656,15 +641,6 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/tv_exercise_title_4"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="버피 - burpee"
-                                android:textSize="16sp"
-                                android:textStyle="bold"
-                                android:textColor="#202325" />
 
                             <!-- 회수 x 세트 -->
                             <LinearLayout
@@ -678,7 +654,8 @@
                                     android:id="@+id/iv_loop_icon_4"
                                     android:layout_width="17dp"
                                     android:layout_height="17dp"
-                                    android:contentDescription="@string/app_name" />
+                                    android:contentDescription="@string/app_name"
+                                    android:src="@drawable/ic_loop"/>
 
                                 <TextView
                                     android:id="@+id/tv_exercise_set_info_4"

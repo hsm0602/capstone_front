@@ -17,6 +17,8 @@ fun WorkoutScreen() {
     var isWorkoutComplete by remember { mutableStateOf(false) }
     var selectedPlans by remember { mutableStateOf<List<ExercisePlan>>(emptyList()) } // 운동 계획 리스트
     var recordIds by remember { mutableStateOf<List<Int>>(emptyList()) }
+    var isEmptyRoutine by remember { mutableStateOf(false) }
+
 
     val sessionManager = remember(selectedPlans, recordIds) {
         if (selectedPlans.isNotEmpty() && recordIds.isNotEmpty()) {
@@ -88,12 +90,24 @@ fun WorkoutScreen() {
             )
         }
 
+        isEmptyRoutine -> {
+            HomeEmptyScreen(
+                onCreateRoutineClick = {
+                    // 원하는 곳으로 이동 (루틴 생성 플로우)
+                    isEmptyRoutine = false
+                }
+            )
+        }
+
         else -> { // 운동 부위 선택 화면
             HomeScreen(
                 onStartWorkout = { plans, ids ->
                     selectedPlans = plans // 부위 선택 저장
                     recordIds = ids   // 운동 계획 설정 화면으로 이동
                     isDoingWorkout = true
+                },
+                onNavigateEmpty = {
+                    isEmptyRoutine = true
                 }
             )
         }
