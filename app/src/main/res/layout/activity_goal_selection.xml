@@ -7,29 +7,17 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF">
 
-    <!-- 상단 연한 파란 바 (상태바 영역 느낌) -->
-    <View
-        android:id="@+id/statusBarBg"
-        android:layout_width="0dp"
-        android:layout_height="28dp"
-        android:background="#E2EAFF"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
     <!-- 뒤로가기 버튼 (일단 안드로이드 기본 아이콘 사용) -->
-    <ImageButton
-        android:id="@+id/btnBackFromGoal"
-        android:layout_width="24dp"
+    <ImageView
+        android:id="@+id/backBtn"
+        android:layout_width="18dp"
         android:layout_height="24dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
-        android:background="@android:color/transparent"
-        android:padding="4dp"
-        android:src="@android:drawable/ic_media_previous"
-        android:contentDescription="뒤로가기"
-        app:layout_constraintTop_toBottomOf="@id/statusBarBg"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_marginTop="24dp"
+        android:src="@drawable/ic_back"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:tint="#5A68FF" />
 
     <!-- 상단 타이틀: 목표 설정 -->
     <TextView
@@ -41,7 +29,7 @@
         android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="#2260FF"
-        app:layout_constraintTop_toBottomOf="@id/statusBarBg"
+        app:layout_constraintTop_toBottomOf="@id/backBtn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5" />

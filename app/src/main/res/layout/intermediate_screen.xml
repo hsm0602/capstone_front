@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <!-- 상단 REST -->
+    <TextView
+        android:id="@+id/tv_rest_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="REST"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="SmallSp" />
+
+    <!-- 중앙 원형 타이머 (정중앙) -->
+    <FrameLayout
+        android:id="@+id/layout_rest_circle"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_rest_title"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/circleTimer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:max="10"
+            android:progress="10"
+            app:indicatorSize="140dp"
+            app:trackThickness="12dp"
+            app:indicatorColor="#2260FF"
+            app:trackColor="#DDDDDD"
+            android:indeterminate="false"
+            android:rotation="-90" />
+
+        <!-- 가운데 숫자 -->
+        <TextView
+            android:id="@+id/tv_rest_second"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10"
+            android:textSize="36sp"
+            android:textStyle="bold"
+            android:textColor="#2260FF"
+            android:gravity="center"
+            android:layout_gravity="center" />
+    </FrameLayout>
+
+    <!-- NOW 컬럼 (왼쪽) -->
+    <LinearLayout
+        android:id="@+id/layout_now_column"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_marginStart="24dp"
+        app:layout_constraintTop_toTopOf="@id/layout_rest_circle"
+        app:layout_constraintBottom_toBottomOf="@id/layout_rest_circle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/layout_rest_circle">
+
+        <TextView
+            android:id="@+id/tv_now_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NOW"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#2260FF"
+            android:layout_marginBottom="16dp" />
+
+        <ImageView
+            android:id="@+id/iv_now_exercise"
+            android:layout_width="120dp"
+            android:layout_height="160dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_exercise_muscle"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/tv_now_exercise_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Squat"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#2260FF"
+            android:layout_marginTop="12dp" />
+
+        <TextView
+            android:id="@+id/tv_now_reps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="15"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#2260FF"
+            android:layout_marginTop="4dp" />
+    </LinearLayout>
+
+    <!-- NEXT 컬럼 (오른쪽) -->
+    <LinearLayout
+        android:id="@+id/layout_next_column"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintTop_toTopOf="@id/layout_rest_circle"
+        app:layout_constraintBottom_toBottomOf="@id/layout_rest_circle"
+        app:layout_constraintStart_toEndOf="@id/layout_rest_circle"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/tv_next_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NEXT"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#2260FF"
+            android:layout_marginBottom="16dp" />
+
+        <ImageView
+            android:id="@+id/iv_next_exercise"
+            android:layout_width="120dp"
+            android:layout_height="160dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_exercise_muscle"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/tv_next_exercise_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Squat"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#2260FF"
+            android:layout_marginTop="12dp" />
+
+        <TextView
+            android:id="@+id/tv_next_reps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="15"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#2260FF"
+            android:layout_marginTop="4dp" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,6 +13,7 @@ import retrofit2.http.Header
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.Response
 
 import com.example.myfirstkotlinapp.ui.model.WeeklyBodyCompositionResponse
 import com.example.myfirstkotlinapp.ui.model.CreateBodyCompositionRequest
@@ -62,4 +63,9 @@ interface ExerciseApi {
     // ⚠️ 가정: 현재 토큰의 user 기준으로 BodyComposition 한 건 추가
 
 
+    @POST("plan/generate-and-save")
+    suspend fun generatePlan(
+        @Query("user_id") userId: Int,
+        @Query("date") date: String
+    ): Response<Void>
 }

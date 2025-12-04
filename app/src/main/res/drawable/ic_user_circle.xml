@@ -1,0 +1,38 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="35dp"
+    android:height="35dp"
+    android:viewportWidth="35"
+    android:viewportHeight="35">
+
+    <!-- 바깥 원 -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#303437"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M17.5,2
+                          A15.5,15.5 0 1,1 17.5,33
+                          A15.5,15.5 0 1,1 17.5,2" />
+
+    <!-- 머리 부분 -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#303437"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M17.5,10
+                          A5,5 0 1,1 17.49,10" />
+
+    <!-- 어깨 부분 -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#303437"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M7,27
+                          c4,-6 17,-6 21,0" />
+
+</vector>

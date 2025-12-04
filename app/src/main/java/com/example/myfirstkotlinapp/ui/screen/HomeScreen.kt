@@ -20,13 +20,17 @@ import java.util.TimeZone
 import android.view.View
 import android.widget.TextView
 import android.widget.LinearLayout
+import java.util.Calendar
+
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    onStartWorkout: (List<ExercisePlan>, List<Int>) -> Unit
+    onStartWorkout: (List<ExercisePlan>, List<Int>) -> Unit,
+    onNavigateEmpty: () -> Unit
 ) {
     val context = LocalContext.current
+    val todayDate by remember { mutableStateOf(Date()) }
 
     // 백엔드에서 가져온 데이터 보관용 상태
     var plans by remember { mutableStateOf<List<ExercisePlan>>(emptyList()) }
@@ -70,6 +74,11 @@ fun HomeScreen(
                 )
             }
 
+            if (dtoList.isEmpty()) {
+                onNavigateEmpty()
+                return@LaunchedEffect
+            }
+
             // 1-6. DTO → ExercisePlan + recordIds 변환
             val (mappedPlans, mappedRecordIds) = mapRecordsToPlans(dtoList)
             plans = mappedPlans
@@ -97,7 +106,9 @@ fun HomeScreen(
         // 로딩 상태면 나중에 ProgressBar 등을 연결해도 됨
         // ex) progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
 
-        // TODO: exercisePlans를 이용해서 카드 4개 내용 채우기
+        // 달력 바인딩 (오늘 기준)
+        bindCalendar(todayDate)
+
         // 예: tvExerciseTitle1.text = exercisePlans.getOrNull(0)?.name ?: "운동 1"
         bindPlansToCards(plans)
         // 3) 재생 버튼 클릭 → 이미 로딩된 데이터로 onStartWorkout 호출
@@ -176,75 +187,6 @@ private fun setProgressBar(
     }
 }
 
-
-// 카드 하나에 필요한 뷰를 묶어놓는 작은 데이터 클래스
-private data class RoutineCardViews(
-    val container: View,
-    val titleView: TextView,
-    val setInfoView: TextView,
-    val setCountView: TextView
-)
-
-/**
- * HomeScreenBinding에 ExercisePlan 리스트를 연결해서
- * 최대 4개의 카드에 반영한다.
- */
-//fun HomeScreenBinding.bindPlansToCards(plans: List<ExercisePlan>) {
-//    // 4개의 카드에 대응하는 뷰 묶음
-//    val cards = listOf(
-//        RoutineCardViews(
-//            container = routineItem1,
-//            titleView = tvExerciseTitle1,
-//            setInfoView = tvExerciseSetInfo1,
-//            setCountView = tvSetCount1
-//        ),
-//        RoutineCardViews(
-//            container = routineItem2,
-//            titleView = tvExerciseTitle2,
-//            setInfoView = tvExerciseSetInfo2,
-//            setCountView = tvSetCount2
-//        ),
-//        RoutineCardViews(
-//            container = routineItem3,
-//            titleView = tvExerciseTitle3,
-//            setInfoView = tvExerciseSetInfo3,
-//            setCountView = tvSetCount3
-//        ),
-//        RoutineCardViews(
-//            container = routineItem4,
-//            titleView = tvExerciseTitle4,
-//            setInfoView = tvExerciseSetInfo4,
-//            setCountView = tvSetCount4
-//        )
-//    )
-//
-//    // 각 카드에 plan이 있으면 채우고, 없으면 GONE 처리
-//    cards.forEachIndexed { index, card ->
-//        val plan = plans.getOrNull(index)
-//
-//        if (plan == null) {
-//            card.container.visibility = View.GONE
-//        } else {
-//            card.container.visibility = View.VISIBLE
-//
-//            // 운동 이름
-//            card.titleView.text = plan.name
-//
-//            // "회수 X 세트수" (첫 세트 reps 기준)
-//            val firstSet = plan.sets.firstOrNull()
-//            card.setInfoView.text = if (firstSet != null) {
-//                "${firstSet.reps}회 X ${plan.sets.size}세트"
-//            } else {
-//                "${plan.sets.size}세트"
-//            }
-//
-//            // "완료세트 / 전체세트"
-//            val completedCount = plan.sets.count { it.isCompleted }
-//            card.setCountView.text = "$completedCount / ${plan.sets.size}"
-//        }
-//    }
-//}
-
 fun HomeScreenBinding.bindPlansToCards(plans: List<ExercisePlan>) {
 
     val cards = listOf(
@@ -299,3 +241,55 @@ fun HomeScreenBinding.bindPlansToCards(plans: List<ExercisePlan>) {
         }
     }
 }
+
+fun HomeScreenBinding.bindCalendar(today: Date) {
+    val tz = TimeZone.getTimeZone("Asia/Seoul")
+
+    // 오늘 날짜 기준 Calendar
+    val todayCal = Calendar.getInstance(tz).apply {
+        time = today
+        // 필요하면 firstDayOfWeek 설정도 가능
+        // firstDayOfWeek = Calendar.MONDAY
+    }
+
+    // 오늘 기준으로 앞뒤 3일 = 총 7일 보여주기 (원하는대로 조정 가능)
+    val startCal = Calendar.getInstance(tz).apply {
+        time = today
+        add(Calendar.DAY_OF_MONTH, -3)
+    }
+
+    // 7칸(앞뒤 3일 + 오늘) 컨테이너와 텍스트 뷰 리스트
+    val dayContainers = listOf(
+        dayItem1, dayItem2, dayItem3, dayItem4, dayItem5, dayItem6, dayItem7
+    )
+
+    val dayTexts = listOf(
+        tvDay1, tvDay2, tvDay3, tvDay4, tvDay5, tvDay6, tvDay7
+    )
+
+    dayContainers.zip(dayTexts).forEachIndexed { index, (container, textView) ->
+        val cal = Calendar.getInstance(tz).apply {
+            time = startCal.time
+            add(Calendar.DAY_OF_MONTH, index)
+        }
+
+        val dayOfMonth = cal.get(Calendar.DAY_OF_MONTH)
+        textView.text = dayOfMonth.toString()
+
+        val isToday =
+            cal.get(Calendar.YEAR) == todayCal.get(Calendar.YEAR) &&
+                    cal.get(Calendar.MONTH) == todayCal.get(Calendar.MONTH) &&
+                    cal.get(Calendar.DAY_OF_MONTH) == todayCal.get(Calendar.DAY_OF_MONTH)
+
+        if (isToday) {
+            // 오늘: 까만 배경 + 흰 글씨 (기존 15번 스타일)
+            container.setBackgroundColor(0xFF303437.toInt())   // #303437
+            textView.setTextColor(0xFFF2F4F5.toInt())          // #F2F4F5
+        } else {
+            // 나머지: 투명 배경 + 회색 글씨
+            container.setBackgroundColor(0x00000000)           // 투명
+            textView.setTextColor(0xFF979C9E.toInt())          // #979C9E
+        }
+    }
+}
+
