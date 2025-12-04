@@ -12,6 +12,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myfirstkotlinapp.session.WorkoutSessionManager
 import kotlinx.coroutines.delay
+import androidx.compose.runtime.*
+import androidx.compose.ui.viewinterop.AndroidViewBinding
+import com.example.myfirstkotlinapp.databinding.IntermediateScreenBinding
+import kotlinx.coroutines.delay
 
 @Composable
 fun IntermediateScreen(
@@ -21,7 +25,9 @@ fun IntermediateScreen(
 ) {
     var secondsRemaining by remember { mutableStateOf(restDurationSec) }
 
-    LaunchedEffect(Unit) {
+    // ⏱ 휴식 타이머: 1초마다 감소
+    LaunchedEffect(restDurationSec) {
+        secondsRemaining = restDurationSec
         while (secondsRemaining > 0) {
             delay(1000)
             secondsRemaining--
@@ -29,60 +35,37 @@ fun IntermediateScreen(
         onRestComplete()
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        contentAlignment = Alignment.Center
+    AndroidViewBinding(
+        modifier = Modifier,
+        factory = IntermediateScreenBinding::inflate
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Spacer(modifier = Modifier.height(32.dp))
-            Text(
-                text = "지금까지의 운동 진행 현황",
-                style = MaterialTheme.typography.headlineMedium
-            )
-            Spacer(modifier = Modifier.height(16.dp))
+        // --- 1) 원형 타이머 + 숫자 바인딩 ---
 
-            // Progress Summary
-            Column(modifier = Modifier.weight(1f)) {
-                sessionManager.completedSets.groupBy { it.first }.forEach { (exerciseIndex, setList) ->
-                    val exercise = sessionManager.plans.getOrNull(exerciseIndex) ?: return@forEach
-                    Text(
-                        text = exercise.name,
-                        fontSize = 20.sp,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Row {
-                        exercise.sets.forEachIndexed { index, _ ->
-                            val completed = setList.any { it.second == index }
-                            Box(
-                                modifier = Modifier
-                                    .padding(4.dp)
-                                    .size(24.dp)
-                                    .background(if (completed) Color.Gray else Color.LightGray),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(text = "${index + 1}", fontSize = 12.sp)
-                            }
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(16.dp))
-                }
-            }
+        // CircularProgressIndicator의 최대값을 휴식 시간으로 설정
+        circleTimer.max = restDurationSec
+        // 남은 시간을 그대로 progress로 쓸지, 경과 시간을 쓸지 선택 가능
+        // 여기서는 남은 시간을 표시하도록 설정 (필요하면 반대로 바꿔도 됨)
+        circleTimer.progress = secondsRemaining
 
-            // Countdown Timer (작게 표시)
-            Text(
-                text = "휴식: $secondsRemaining 초",
-                fontSize = 18.sp,
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(bottom = 16.dp)
-            )
-        }
+        // 가운데 숫자
+        tvRestSecond.text = secondsRemaining.toString()
+
+        // --- 2) NOW / NEXT 세트 정보 바인딩 ---
+
+        val nowInfo = sessionManager.getNowSetInfo()
+        val nextInfo = sessionManager.getNextSetInfo()
+
+        // NOW: 방금 수행한 세트
+        tvNowExerciseName.text = nowInfo?.first?.name ?: "-"
+        tvNowReps.text = nowInfo?.second?.reps?.toString() ?: "-"
+
+        // NEXT: 휴식 후에 진행할 세트 (없으면 "-")
+        tvNextExerciseName.text = nextInfo?.first?.name ?: "-"
+        tvNextReps.text = nextInfo?.second?.reps?.toString() ?: "-"
+
+        // 운동 이미지(iv_now_exercise, iv_next_exercise)는 지금은 공통 그림 사용 중이라면 그대로 두고,
+        // 나중에 운동별 썸네일 매핑 로직 넣으면 됨.
+        // ivNowExercise.setImageResource(...)
+        // ivNextExercise.setImageResource(...)
     }
 }

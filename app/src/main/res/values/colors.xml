@@ -7,4 +7,10 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="primary_blue">#2260FF</color>
+    <color name="status_bar_light_blue">#E2EAFF</color>
+    <color name="goal_button_text">#FAFAFB</color>
+    <color name="title_text">#303437</color>
+
+
 </resources>

@@ -158,8 +158,9 @@
                             android:textSize="14sp" />
                     </LinearLayout>
 
-                    <!-- 두 번째 줄: 13~19 -->
+                    <!-- 두 번째 줄: 7일 날짜 (동적 표시용) -->
                     <LinearLayout
+                        android:id="@+id/date_row_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
@@ -167,26 +168,51 @@
                         android:orientation="horizontal"
                         android:weightSum="7">
 
-                        <TextView
+                        <!-- 1번 칸 -->
+                        <LinearLayout
+                            android:id="@+id/day_item_1"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="28dp"
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="13"
                             android:textColor="#979C9E"
                             android:textSize="14sp" />
 
-                        <TextView
+                            <TextView
+                                android:id="@+id/tv_day_1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="13"
+                                android:textSize="14sp"
+                                android:textColor="#979C9E" />
+                        </LinearLayout>
+
+                        <!-- 2번 칸 -->
+                        <LinearLayout
+                            android:id="@+id/day_item_2"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="28dp"
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="14"
                             android:textColor="#979C9E"
                             android:textSize="14sp" />
 
-                        <!-- 선택된 날짜 (15) -->
+                            <TextView
+                                android:id="@+id/tv_day_2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="14"
+                                android:textSize="14sp"
+                                android:textColor="#979C9E" />
+                        </LinearLayout>
+
+                        <!-- 3~7번 칸도 동일 패턴 -->
                         <LinearLayout
+                            android:id="@+id/day_item_3"
                             android:layout_width="0dp"
                             android:layout_height="28dp"
                             android:layout_weight="1"
@@ -196,6 +222,7 @@
                             android:padding="4dp">
 
                             <TextView
+                                android:id="@+id/tv_day_3"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
@@ -204,36 +231,70 @@
                                 android:textSize="14sp" />
                         </LinearLayout>
 
-                        <TextView
+                        <LinearLayout
+                            android:id="@+id/day_item_4"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="28dp"
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="16"
                             android:textColor="#979C9E"
                             android:textSize="14sp" />
 
-                        <TextView
+                            <TextView
+                                android:id="@+id/tv_day_4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="16"
+                                android:textSize="14sp"
+                                android:textColor="#979C9E" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/day_item_5"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="28dp"
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="17"
                             android:textColor="#979C9E"
                             android:textSize="14sp" />
 
-                        <TextView
+                            <TextView
+                                android:id="@+id/tv_day_5"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="17"
+                                android:textSize="14sp"
+                                android:textColor="#979C9E" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/day_item_6"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="28dp"
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="18"
                             android:textColor="#979C9E"
                             android:textSize="14sp" />
 
-                        <TextView
+                            <TextView
+                                android:id="@+id/tv_day_6"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="18"
+                                android:textSize="14sp"
+                                android:textColor="#979C9E" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/day_item_7"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="28dp"
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="19"
@@ -620,7 +681,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:background="#FFFFFF"
+                        android:background="@drawable/rounded_24_2"
                         android:padding="24dp"
                         android:layout_marginBottom="16dp">
 

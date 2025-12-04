@@ -56,6 +56,21 @@
         </activity>
 
         <activity android:name=".WelcomeActivity" />
+
+        <activity
+            android:name=".GoalSelectionActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".GoalSettingActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"/>
+
+        <!-- 설문2 -->
+        <activity android:name=".SurveyActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"/>
+
     </application>
 
 </manifest>
