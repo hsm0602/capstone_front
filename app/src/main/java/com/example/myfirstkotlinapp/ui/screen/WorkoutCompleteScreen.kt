@@ -33,7 +33,8 @@ fun WorkoutCompleteScreen(
                     sessionManager.setTimings.forEach { set ->
                         val dto = ExerciseRecordUpdateDto(
                             exerciseTime = set.workoutDuration().toInt(),
-                            restTime = set.restDuration().toInt()
+                            restTime = set.restDuration().toInt(),
+                            isCompleted = true
                         )
                         val authedApi = RetrofitClient.createAuthorizedClient(token)
                         authedApi.patchExerciseRecord(set.recordId, dto)

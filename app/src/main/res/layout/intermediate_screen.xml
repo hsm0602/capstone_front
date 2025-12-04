@@ -39,7 +39,7 @@
             android:max="10"
             android:progress="10"
             app:indicatorSize="140dp"
-            app:trackThickness="12dp"
+            app:trackThickness="10dp"
             app:indicatorColor="#2260FF"
             app:trackColor="#DDDDDD"
             android:indeterminate="false"

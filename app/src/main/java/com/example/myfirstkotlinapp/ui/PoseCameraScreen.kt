@@ -123,11 +123,15 @@ fun PoseCameraScreen(
     val poseHelper = remember {
         PoseLandmarkerHelper(context) { result ->
             val counted = when (exerciseName) {
-                "스쿼트" -> ExerciseLogic.countSquat(result)
-                "푸쉬업" -> ExerciseLogic.countPushup(result)
-                "풀업" -> ExerciseLogic.countPullup(result)
-                "숄더 프레스" -> ExerciseLogic.countShoulderPress(result)
-                "레그 레이즈" -> ExerciseLogic.countLegRaise(result)
+                "Squat" -> ExerciseLogic.countSquat(result)
+                "Push Up" -> ExerciseLogic.countPushup(result)
+                "Pull Up" -> ExerciseLogic.countPullup(result)
+                "Shoulder Press" -> ExerciseLogic.countShoulderPress(result)
+                "Leg Raise" -> ExerciseLogic.countLegRaise(result)
+                "Dumbbell Deadlift" -> ExerciseLogic.countDumbbellDeadlift(result)
+                "CrunchFloor" -> ExerciseLogic.countCrunchFloor(result)
+                "Elbow To Knee" -> ExerciseLogic.countElbowToKnee(result)
+                "Pike Pushup" -> ExerciseLogic.countPikePushup(result)
                 else -> false
             }
 

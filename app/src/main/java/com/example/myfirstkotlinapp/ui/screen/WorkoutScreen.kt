@@ -6,9 +6,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import com.example.myfirstkotlinapp.session.WorkoutSessionManager
 import com.example.myfirstkotlinapp.ui.PoseCameraScreen
 import com.example.myfirstkotlinapp.ui.model.ExercisePlan
+import android.content.Intent
 
 @Composable
 fun WorkoutScreen() {
@@ -18,6 +20,7 @@ fun WorkoutScreen() {
     var selectedPlans by remember { mutableStateOf<List<ExercisePlan>>(emptyList()) } // 운동 계획 리스트
     var recordIds by remember { mutableStateOf<List<Int>>(emptyList()) }
     var isEmptyRoutine by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
 
     val sessionManager = remember(selectedPlans, recordIds) {
@@ -43,6 +46,7 @@ fun WorkoutScreen() {
                     isWorkoutComplete = false
                     selectedPlans = emptyList()
                     recordIds = emptyList()
+                    isEmptyRoutine = false
                 }
             )
         }
@@ -93,8 +97,10 @@ fun WorkoutScreen() {
         isEmptyRoutine -> {
             HomeEmptyScreen(
                 onCreateRoutineClick = {
-                    // 원하는 곳으로 이동 (루틴 생성 플로우)
                     isEmptyRoutine = false
+                    val intent = Intent(context, CreateRoutineActivity::class.java)
+                    context.startActivity(intent)
+                    // 원하는 곳으로 이동 (루틴 생성 플로우)
                 }
             )
         }

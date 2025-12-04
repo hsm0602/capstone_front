@@ -48,6 +48,7 @@ interface ExerciseApi {
     @POST("plan/generate-and-save")
     suspend fun generatePlan(
         @Query("user_id") userId: Int,
-        @Query("date") date: String
+        @Query("date") date: String,
+        @Query("constraints") constraints: String
     ): Response<Void>
 }

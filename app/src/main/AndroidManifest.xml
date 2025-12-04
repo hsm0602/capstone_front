@@ -37,7 +37,8 @@
             android:windowSoftInputMode="adjustResize"/>
 
         <!-- SignupActivity 추가 -->
-        <activity android:name=".SignupActivity" />
+        <activity android:name=".SignupActivity"
+            android:windowSoftInputMode="adjustResize"/>
 
 
         <!-- SplashActivity는 시작화면 -->

@@ -143,8 +143,8 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="3"
-                            android:textSize="16sp"
-                            android:textColor="#2260FF" />
+                            android:textSize="14sp"
+                            android:textColor="#809CFF" />
 
                         <TextView
                             android:layout_width="0dp"

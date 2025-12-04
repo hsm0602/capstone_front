@@ -34,11 +34,7 @@ class GoalSettingActivity : ComponentActivity() {
             MyFirstKotlinAppTheme {
                 GoalStateScreen(
                     userId = userId,
-                    onUpdateSuccess = { userId ->
-                        // ✅ 서버 저장 성공 후 홈(MainActivity)으로 이동
-                        val intent = Intent(this@GoalSettingActivity, SurveyActivity::class.java)
-                        intent.putExtra("userId", userId)
-                        startActivity(intent)
+                    onUpdateSuccess = {
                         // 현재 화면은 스택에서 제거
                         finish()
                     }
@@ -77,7 +73,7 @@ fun GoalSettingXmlScreen(
 @Composable
 fun GoalStateScreen(
     userId: Int,
-    onUpdateSuccess: (Int) -> Unit
+    onUpdateSuccess: () -> Unit
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -111,7 +107,7 @@ fun GoalStateScreen(
 
                     if (response.isSuccessful) {
                         Toast.makeText(context, "목표 상태가 저장되었습니다.", Toast.LENGTH_SHORT).show()
-                        onUpdateSuccess(userId)
+                        onUpdateSuccess()
                     } else {
                         Toast.makeText(
                             context,

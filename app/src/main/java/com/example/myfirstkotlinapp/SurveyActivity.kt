@@ -23,7 +23,10 @@ class SurveyActivity : ComponentActivity() {
         setContent {
             SurvayXmlScreen(
                 userId = userId,
-                onNext = {
+                onNext = { userId ->
+                    val intent = Intent(this, GoalSettingActivity::class.java)
+                    intent.putExtra("userId", userId)
+                    startActivity(intent)
                     finish()
                 }
             )
@@ -32,7 +35,7 @@ class SurveyActivity : ComponentActivity() {
 }
 
 @Composable
-fun SurvayXmlScreen(userId: Int, onNext: () -> Unit) {
+fun SurvayXmlScreen(userId: Int, onNext: (Int) -> Unit) {
 
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -70,7 +73,7 @@ fun SurvayXmlScreen(userId: Int, onNext: () -> Unit) {
 
                     if (response.isSuccessful) {
                         Toast.makeText(context, "저장되었습니다!", Toast.LENGTH_SHORT).show()
-                        onNext()
+                        onNext(userId)
                     } else {
                         Toast.makeText(context, "실패: ${response.code()}", Toast.LENGTH_SHORT).show()
                     }

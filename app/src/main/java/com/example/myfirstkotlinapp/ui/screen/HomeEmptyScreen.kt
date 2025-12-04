@@ -46,65 +46,7 @@ fun HomeEmptyScreen(
 
         // "루틴 생성하기" 카드 클릭
         createRoutineCard.setOnClickListener {
-
-            // ⭐ 이 안에서 백엔드 POST 실행하려면 launch 필요함
-            coroutineScope.launch {
-
-                try {
-                    // 1. 토큰
-                    val sharedPref = context.getSharedPreferences("auth", Context.MODE_PRIVATE)
-                    val token = sharedPref.getString("access_token", null)
-
-                    if (token.isNullOrBlank()) {
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(context, "로그인이 필요합니다.", Toast.LENGTH_SHORT).show()
-                        }
-                        return@launch
-                    }
-
-                    val authedApi = RetrofitClient.createAuthorizedClient(token)
-
-                    // 2. 유저 정보
-                    val userInfo = withContext(Dispatchers.IO) {
-                        authedApi.getCurrentUser()
-                    }
-                    val userId = userInfo.id
-
-                    // 3. 날짜 포맷
-                    val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-                    sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
-                    val today = sdf.format(Date())
-
-                    // 4. 플랜 생성 POST 요청
-                    val response = withContext(Dispatchers.IO) {
-                        authedApi.generatePlan(
-                            userId = userId,
-                            date = today
-                        )
-                    }
-
-                    if (response.isSuccessful) {
-                        // ⭐ 5. 성공 후 다음 화면으로 이동
-                        withContext(Dispatchers.Main) {
-                            onCreateRoutineClick()
-                        }
-                    } else {
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(
-                                context,
-                                "루틴 생성에 실패했습니다. (${response.code()})",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
-
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(context, "루틴 생성 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
+            onCreateRoutineClick()
         }
     }
 }

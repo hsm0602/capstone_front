@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.example.myfirstkotlinapp.ui.screen.MainScreen
+import com.example.myfirstkotlinapp.ui.screen.WorkoutScreen
 import com.example.myfirstkotlinapp.ui.theme.MyFirstKotlinAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -11,7 +12,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyFirstKotlinAppTheme {
-                MainScreen()
+                WorkoutScreen()
             }
         }
     }
