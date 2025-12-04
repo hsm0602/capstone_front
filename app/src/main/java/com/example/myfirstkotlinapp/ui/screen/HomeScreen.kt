@@ -292,4 +292,3 @@ fun HomeScreenBinding.bindCalendar(today: Date) {
         }
     }
 }
-
