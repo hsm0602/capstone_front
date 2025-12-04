@@ -15,6 +15,10 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.Response
 
+import com.example.myfirstkotlinapp.ui.model.WeeklyBodyCompositionResponse
+import com.example.myfirstkotlinapp.ui.model.CreateBodyCompositionRequest
+import retrofit2.Response
+
 interface ExerciseApi {
     // 운동 목록 get
     @GET("exercises")
@@ -44,6 +48,20 @@ interface ExerciseApi {
         @Query("user_id") userId: Int,
         @Query("date") date: String   // today: "yyyy-MM-dd"
     ): List<ExerciseRecordDto>
+
+    @GET("body_composition/weekly")
+    suspend fun getWeeklyBodyComposition(
+        @Query("metric") metric: String, // "weight" or "body_fat"
+        @Query("days") days: Int = 7
+    ): WeeklyBodyCompositionResponse
+    // ⚠️ 가정: 현재 토큰의 user 기준으로 최근 7일 기록을 반환
+
+    @POST("body_composition")
+    suspend fun createBodyComposition(
+        @Body body: CreateBodyCompositionRequest
+    ): Response<Void>
+    // ⚠️ 가정: 현재 토큰의 user 기준으로 BodyComposition 한 건 추가
+
 
     @POST("plan/generate-and-save")
     suspend fun generatePlan(
