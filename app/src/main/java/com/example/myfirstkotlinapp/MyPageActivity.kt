@@ -97,8 +97,9 @@ fun MyPageXmlScreen() {
                     val metricParam =
                         if (currentMetric == BodyCompositionChartView.Metric.WEIGHT) "weight"
                         else "body_fat"
-
+                    val userId = exerciseApi.getCurrentUser().id
                     val weekly = exerciseApi.getWeeklyBodyComposition(
+                        userId,
                         metric = metricParam,
                         days = 7
                     )

@@ -68,6 +68,14 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize"/>
 
+        <activity
+            android:name=".MyPageActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.screen.CreateRoutineActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

@@ -14,10 +14,8 @@ import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.Response
-
 import com.example.myfirstkotlinapp.ui.model.WeeklyBodyCompositionResponse
 import com.example.myfirstkotlinapp.ui.model.CreateBodyCompositionRequest
-import retrofit2.Response
 
 interface ExerciseApi {
     // 운동 목록 get
@@ -49,8 +47,9 @@ interface ExerciseApi {
         @Query("date") date: String   // today: "yyyy-MM-dd"
     ): List<ExerciseRecordDto>
 
-    @GET("body_composition/weekly")
+    @GET("exercise/body_composition/weekly")
     suspend fun getWeeklyBodyComposition(
+        @Query("user_id") userId: Int,
         @Query("metric") metric: String, // "weight" or "body_fat"
         @Query("days") days: Int = 7
     ): WeeklyBodyCompositionResponse

@@ -67,6 +67,8 @@
 
                 <TextView
                     android:id="@+id/tvUserName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="User"
                     android:textSize="18sp"
                     android:textStyle="bold"
@@ -74,6 +76,8 @@
 
                 <TextView
                     android:id="@+id/tvUserGoal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="information"
                     android:textSize="14sp"
                     android:textColor="#7A7E80"/>

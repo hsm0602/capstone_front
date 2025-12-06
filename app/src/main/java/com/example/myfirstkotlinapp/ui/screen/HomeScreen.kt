@@ -21,13 +21,18 @@ import android.view.View
 import android.widget.TextView
 import android.widget.LinearLayout
 import java.util.Calendar
-
+import android.content.Intent
+import com.example.myfirstkotlinapp.MyPageActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    onStartWorkout: (List<ExercisePlan>, List<Int>) -> Unit,
-    onNavigateEmpty: () -> Unit
+    onStartWorkout: (List<ExercisePlan>, List<Int>) -> Unit
 ) {
     val context = LocalContext.current
     val todayDate by remember { mutableStateOf(Date()) }
@@ -38,57 +43,73 @@ fun HomeScreen(
     var isLoading by remember { mutableStateOf(true) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
 
+    val scope = rememberCoroutineScope()
+
+    fun reloadPlans() {
+        scope.launch {
+            try {
+                isLoading = true
+
+                val sharedPref = context.getSharedPreferences("auth", Context.MODE_PRIVATE)
+                val token = sharedPref.getString("access_token", null)
+
+                if (token.isNullOrBlank()) {
+                    errorMessage = "로그인이 필요합니다."
+                    isLoading = false
+                    plans = emptyList()
+                    recordIds = emptyList()
+                    return@launch
+                }
+
+                val authedApi = RetrofitClient.createAuthorizedClient(token)
+
+                val userInfo = withContext(Dispatchers.IO) {
+                    authedApi.getCurrentUser()
+                }
+                val userId = userInfo.id
+
+                val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
+                val today = sdf.format(Date())
+
+                val dtoList: List<ExerciseRecordDto> = withContext(Dispatchers.IO) {
+                    authedApi.getExerciseRecord(
+                        userId = userId,
+                        date = today
+                    )
+                }
+
+                val (mappedPlans, mappedRecordIds) = mapRecordsToPlans(dtoList)
+                plans = mappedPlans
+                recordIds = mappedRecordIds
+                isLoading = false
+            } catch (e: Exception) {
+                e.printStackTrace()
+                errorMessage = "운동 목록을 불러오지 못했습니다."
+                isLoading = false
+                plans = emptyList()
+                recordIds = emptyList()
+            }
+        }
+    }
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                reloadPlans()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
     // 1) HomeScreen에 들어오자마자 운동 기록 불러오기
     LaunchedEffect(Unit) {
-        try {
-            // 1-1. 토큰 가져오기
-            val sharedPref = context.getSharedPreferences("auth", Context.MODE_PRIVATE)
-            val token = sharedPref.getString("access_token", null)
-
-            if (token.isNullOrBlank()) {
-                errorMessage = "로그인이 필요합니다."
-                isLoading = false
-                return@LaunchedEffect
-            }
-
-            // 1-2. 인증된 Retrofit 클라이언트 생성
-            val authedApi = RetrofitClient.createAuthorizedClient(token)
-
-            // 1-3. 현재 유저 정보 호출 (suspend 함수라고 가정)
-            val userInfo = withContext(Dispatchers.IO) {
-                authedApi.getCurrentUser()
-            }
-            val userId = userInfo.id
-
-            // 1-4. 오늘 날짜 구해서 문자열로 포맷
-            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
-            val today = sdf.format(Date())
-            // 예: "2025-11-20"
-
-            // 1-5. 오늘 날짜의 운동 기록 가져오기
-            val dtoList: List<ExerciseRecordDto> = withContext(Dispatchers.IO) {
-                authedApi.getExerciseRecord(
-                    userId = userId,
-                    date = today
-                )
-            }
-
-            if (dtoList.isEmpty()) {
-                onNavigateEmpty()
-                return@LaunchedEffect
-            }
-
-            // 1-6. DTO → ExercisePlan + recordIds 변환
-            val (mappedPlans, mappedRecordIds) = mapRecordsToPlans(dtoList)
-            plans = mappedPlans
-            recordIds = mappedRecordIds
-            isLoading = false
-        } catch (e: Exception) {
-            e.printStackTrace()
-            errorMessage = "운동 목록을 불러오지 못했습니다."
-            isLoading = false
-        }
+        reloadPlans()
     }
 
     // 2) XML ↔ Compose 바인딩
@@ -103,6 +124,11 @@ fun HomeScreen(
             Toast.makeText(root.context, msg, Toast.LENGTH_SHORT).show()
         }
 
+        btnProfile.setOnClickListener {
+            val intent = Intent(root.context, MyPageActivity::class.java)
+            root.context.startActivity(intent)
+        }
+
         // 로딩 상태면 나중에 ProgressBar 등을 연결해도 됨
         // ex) progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
 
@@ -110,15 +136,30 @@ fun HomeScreen(
         bindCalendar(todayDate)
 
         // 예: tvExerciseTitle1.text = exercisePlans.getOrNull(0)?.name ?: "운동 1"
-        bindPlansToCards(plans)
-        // 3) 재생 버튼 클릭 → 이미 로딩된 데이터로 onStartWorkout 호출
-        btnPlayRoutine.setOnClickListener {
-            if (plans.isEmpty() || recordIds.isEmpty()) {
-                Toast.makeText(root.context, "운동 데이터를 아직 불러오는 중입니다.", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
+        if (plans.isEmpty()) {
+            // 루틴 없음 → "루틴 생성하기" 카드만 보이기
+            routineCardContainer.visibility = View.GONE
+            createRoutineCard.visibility = View.VISIBLE
 
-            onStartWorkout(plans, recordIds)
+            createRoutineCard.setOnClickListener {
+                val intent = Intent(root.context, CreateRoutineActivity::class.java)
+                root.context.startActivity(intent)
+            }
+        } else {
+            // 루틴 있음 → 루틴 카드 보여주기
+            routineCardContainer.visibility = View.VISIBLE
+            createRoutineCard.visibility = View.GONE
+
+            // 카드 내용 채우기
+            bindPlansToCards(plans)
+
+            btnPlayRoutine.setOnClickListener {
+                if (plans.isEmpty() || recordIds.isEmpty()) {
+                    Toast.makeText(root.context, "운동 데이터를 아직 불러오는 중입니다.", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                onStartWorkout(plans, recordIds)
+            }
         }
     }
 }

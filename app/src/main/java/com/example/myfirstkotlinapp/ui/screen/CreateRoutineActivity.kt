@@ -46,8 +46,13 @@ fun RoutineInputScreen(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()   // Retrofit 실행할 코루틴 scope
 
+    var isLoading by remember { mutableStateOf(false) }
+
     // ⬇️ XML(ActivityRoutineCreate.xml)을 Compose 안에서 그대로 사용하기
     AndroidViewBinding(ActivityRoutineCreateBinding::inflate) {
+
+        progressBar.visibility = if (isLoading) android.view.View.VISIBLE else android.view.View.GONE
+        nextBtn.isEnabled = !isLoading
 
         nextBtn.setOnClickListener {
             val goal = editGoal.text.toString().trim()
@@ -67,28 +72,36 @@ fun RoutineInputScreen(
                     Toast.makeText(context, "로그인이 필요합니다.", Toast.LENGTH_SHORT).show()
                     return@launch  // 코루틴만 종료
                 }
+                try {
+                    isLoading = true
+                    val authedApi = RetrofitClient.createAuthorizedClient(token)
 
-                val authedApi = RetrofitClient.createAuthorizedClient(token)
+                    val userInfo = withContext(Dispatchers.IO) {
+                        authedApi.getCurrentUser()
+                    }
+                    val userId = userInfo.id
 
-                val userInfo = withContext(Dispatchers.IO) {
-                    authedApi.getCurrentUser()
-                }
-                val userId = userInfo.id
+                    val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                    sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
+                    val today = sdf.format(Date())
 
-                val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-                sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
-                val today = sdf.format(Date())
+                    val response = authedApi.generatePlan(
+                        userId = userId,
+                        date = today,
+                        constraints = goal
+                    )
 
-                val response = authedApi.generatePlan(
-                    userId = userId,
-                    date = today,
-                    constraints = goal
-                )
-
-                if (response.isSuccessful) {
-                    onNext()
-                } else {
-                    Toast.makeText(context, "루틴 생성 실패", Toast.LENGTH_SHORT).show()
+                    if (response.isSuccessful) {
+                        onNext()
+                    } else {
+                        Toast.makeText(context, "루틴 생성 실패", Toast.LENGTH_SHORT).show()
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Toast.makeText(context, "오류 발생: ${e.message}", Toast.LENGTH_SHORT).show()
+                } finally {
+                    // 🔚 로딩 종료
+                    isLoading = false
                 }
             }
         }

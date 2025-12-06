@@ -11,6 +11,9 @@ import com.example.myfirstkotlinapp.session.WorkoutSessionManager
 import com.example.myfirstkotlinapp.ui.PoseCameraScreen
 import com.example.myfirstkotlinapp.ui.model.ExercisePlan
 import android.content.Intent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import android.app.Activity
 
 @Composable
 fun WorkoutScreen() {
@@ -94,26 +97,12 @@ fun WorkoutScreen() {
             )
         }
 
-        isEmptyRoutine -> {
-            HomeEmptyScreen(
-                onCreateRoutineClick = {
-                    isEmptyRoutine = false
-                    val intent = Intent(context, CreateRoutineActivity::class.java)
-                    context.startActivity(intent)
-                    // 원하는 곳으로 이동 (루틴 생성 플로우)
-                }
-            )
-        }
-
         else -> { // 운동 부위 선택 화면
             HomeScreen(
                 onStartWorkout = { plans, ids ->
                     selectedPlans = plans // 부위 선택 저장
                     recordIds = ids   // 운동 계획 설정 화면으로 이동
                     isDoingWorkout = true
-                },
-                onNavigateEmpty = {
-                    isEmptyRoutine = true
                 }
             )
         }
