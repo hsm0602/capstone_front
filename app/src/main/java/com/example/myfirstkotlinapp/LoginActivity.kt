@@ -76,7 +76,7 @@ fun LoginXmlScreen(onLoginSuccess: () -> Unit) {
             }
         }
 
-        // ✅ 회원가입 이동
+        // 회원가입
         tvSignUp.setOnClickListener {
             context.startActivity(Intent(context, SignupActivity::class.java))
         }

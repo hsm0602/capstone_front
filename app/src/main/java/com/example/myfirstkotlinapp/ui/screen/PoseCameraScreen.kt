@@ -1,4 +1,4 @@
-package com.example.myfirstkotlinapp.ui
+package com.example.myfirstkotlinapp.ui.screen
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -56,7 +56,7 @@ fun PoseCameraScreen(
     val currentSet = sessionManager.currentSet
     val exerciseName = currentExercise?.name ?: ""
     val targetReps = currentSet?.reps ?: 0
-    val currentSetNumber = sessionManager.currentSetIndex + 1 // 세트 번호 (1부터 시작)
+    val currentSetNumber = sessionManager.currentSetIndex + 1
     val totalSets = currentExercise?.sets?.size ?: 0
 
     // TTS 초기화
@@ -64,15 +64,14 @@ fun PoseCameraScreen(
     var isTtsReady by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
+        // tts를 위한 설정.
         tts = TextToSpeech(context) { status ->
             if (status == TextToSpeech.SUCCESS) {
                 tts?.let { textToSpeech ->
                     val result = textToSpeech.setLanguage(Locale.KOREAN)
                     if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                        // 한국어가 지원되지 않으면 영어로 설정
                         textToSpeech.setLanguage(Locale.ENGLISH)
                     }
-                    // TTS 속도 조절 (0.5 ~ 2.0, 기본값 1.0)
                     textToSpeech.setSpeechRate(1.0f)
                     isTtsReady = true
                 }
@@ -80,7 +79,7 @@ fun PoseCameraScreen(
         }
     }
 
-    // TTS 정리
+    // tts 정리
     DisposableEffect(Unit) {
         onDispose {
             tts?.stop()
@@ -88,7 +87,7 @@ fun PoseCameraScreen(
         }
     }
 
-    // 권한 요청
+    // 카메라 권한 요청.
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
@@ -108,7 +107,7 @@ fun PoseCameraScreen(
     var count by remember { mutableStateOf(0) }
     var showCount by remember { mutableStateOf(false) }
 
-    // 음성 출력 함수
+    // 음성 출력 함수.
     fun speakCount(currentCount: Int, target: Int) {
         if (isTtsReady && tts != null) {
             val message = when {
@@ -122,6 +121,7 @@ fun PoseCameraScreen(
 
     val poseHelper = remember {
         PoseLandmarkerHelper(context) { result ->
+            // 운동별 로직과 매핑.
             val counted = when (exerciseName) {
                 "Squat" -> ExerciseLogic.countSquat(result)
                 "Push Up" -> ExerciseLogic.countPushup(result)
@@ -157,6 +157,7 @@ fun PoseCameraScreen(
     val previewView = remember { PreviewView(context) }
     val cameraProviderFuture = remember { ProcessCameraProvider.getInstance(context) }
 
+    // camera 정리. 안하면 튕김 현상 발생.
     DisposableEffect(Unit) {
         val cameraProvider = cameraProviderFuture.get()
 

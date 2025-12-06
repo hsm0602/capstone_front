@@ -6,33 +6,25 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
 import com.example.myfirstkotlinapp.session.WorkoutSessionManager
-import com.example.myfirstkotlinapp.ui.PoseCameraScreen
 import com.example.myfirstkotlinapp.ui.model.ExercisePlan
-import android.content.Intent
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import android.app.Activity
 
 @Composable
 fun WorkoutScreen() {
-    var isDoingWorkout by remember { mutableStateOf(false) }     // 운동을 진행할지 말지
-    var isResting by remember { mutableStateOf(false) }
-    var isWorkoutComplete by remember { mutableStateOf(false) }
-    var selectedPlans by remember { mutableStateOf<List<ExercisePlan>>(emptyList()) } // 운동 계획 리스트
-    var recordIds by remember { mutableStateOf<List<Int>>(emptyList()) }
-    var isEmptyRoutine by remember { mutableStateOf(false) }
-    val context = LocalContext.current
+    var isDoingWorkout by remember { mutableStateOf(false) } // 운동 flag
+    var isResting by remember { mutableStateOf(false) } // 휴식 flag
+    var isWorkoutComplete by remember { mutableStateOf(false) } // 운동 완료 flag
+    var selectedPlans by remember { mutableStateOf<List<ExercisePlan>>(emptyList()) } // 운동 목록
+    var recordIds by remember { mutableStateOf<List<Int>>(emptyList()) } // 각 운동 목록의 DB 레코드 id
 
-
+    // 운동 목록을 세션 매니저로 관리, 운동 시간 계산.
     val sessionManager = remember(selectedPlans, recordIds) {
         if (selectedPlans.isNotEmpty() && recordIds.isNotEmpty()) {
             WorkoutSessionManager(selectedPlans, recordIds)
         } else null
     }
 
-    // 첫 운동 시작 시 startWorkout 호출 보장
+    // 첫 운동 시작 시 startWorkout 호출 보장.
     LaunchedEffect(isDoingWorkout, sessionManager) {
         if (isDoingWorkout && sessionManager != null && !isResting && !isWorkoutComplete) {
             sessionManager.startWorkout()
@@ -49,7 +41,6 @@ fun WorkoutScreen() {
                     isWorkoutComplete = false
                     selectedPlans = emptyList()
                     recordIds = emptyList()
-                    isEmptyRoutine = false
                 }
             )
         }
@@ -66,8 +57,6 @@ fun WorkoutScreen() {
                     if (!sessionManager.isFinished) {
                         isResting = false
                         isDoingWorkout = true  // 다음 세트 수행
-                        // 이미 markSetAsCompleted에서 다음 세트 타이밍이 초기화되었기 때문에
-                        // 여기서는 startWorkout을 호출하지 않음
                     } else {
                         // 모든 운동이 끝난 경우
                         isResting = false
@@ -97,12 +86,12 @@ fun WorkoutScreen() {
             )
         }
 
-        else -> { // 운동 부위 선택 화면
+        else -> { // 홈 화면
             HomeScreen(
                 onStartWorkout = { plans, ids ->
-                    selectedPlans = plans // 부위 선택 저장
-                    recordIds = ids   // 운동 계획 설정 화면으로 이동
-                    isDoingWorkout = true
+                    selectedPlans = plans // 운동 목록 저장
+                    recordIds = ids
+                    isDoingWorkout = true // 운동 시작
                 }
             )
         }

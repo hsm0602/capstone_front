@@ -1,4 +1,4 @@
-package com.example.myfirstkotlinapp
+package com.example.myfirstkotlinapp.ui.screen
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -13,6 +13,9 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidViewBinding
+import com.example.myfirstkotlinapp.GoalSelectionActivity
+import com.example.myfirstkotlinapp.LoginActivity
+import com.example.myfirstkotlinapp.R
 import com.example.myfirstkotlinapp.databinding.ActivityMyPageBinding
 import com.example.myfirstkotlinapp.network.RetrofitClient
 import com.example.myfirstkotlinapp.ui.model.CreateBodyCompositionRequest
@@ -39,7 +42,6 @@ fun MyPageXmlScreen() {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
-    // 🔐 토큰 가져오기
     val prefs = context.getSharedPreferences("auth", Context.MODE_PRIVATE)
     val token = prefs.getString("access_token", null)
 
@@ -52,27 +54,16 @@ fun MyPageXmlScreen() {
         return
     }
 
-    // Retrofit API 생성
     val exerciseApi = remember(token) { RetrofitClient.createAuthorizedClient(token) }
 
-    // 현재 그래프 지표
     var currentMetric by remember { mutableStateOf(BodyCompositionChartView.Metric.WEIGHT) }
 
-    // 캐싱된 사용자 정보
     var cachedUser by remember { mutableStateOf<UserDto?>(null) }
 
-    // 최초 실핼 여부
     var initialized by remember { mutableStateOf(false) }
 
-
-    // ===========================
-    //  📌 UI + 로직 시작
-    // ===========================
     AndroidViewBinding(ActivityMyPageBinding::inflate) {
 
-        // -----------------------
-        // 1️⃣ 사용자 목표 UI 업데이트 함수
-        // -----------------------
         fun updateGoalDisplay(user: UserDto) {
             tvUserName.text = user.username
             tvUserGoal.text = user.user_goal ?: "설정된 목표 없음"
@@ -87,10 +78,6 @@ fun MyPageXmlScreen() {
             }
         }
 
-
-        // -----------------------
-        // 2️⃣ 그래프 로드 함수 (최근 7개)
-        // -----------------------
         fun reloadWeeklyChart() {
             coroutineScope.launch {
                 try {
@@ -121,10 +108,6 @@ fun MyPageXmlScreen() {
             }
         }
 
-
-        // -----------------------
-        // 3️⃣ 사용자 정보 불러오기
-        // -----------------------
         fun reloadUserInfo() {
             coroutineScope.launch {
                 try {
@@ -139,11 +122,6 @@ fun MyPageXmlScreen() {
                 }
             }
         }
-
-
-        // -----------------------
-        // 4️⃣ UI 이벤트 처리
-        // -----------------------
 
         btnBack.setOnClickListener {
             (context as? Activity)?.finish()
@@ -215,10 +193,6 @@ fun MyPageXmlScreen() {
                 .show()
         }
 
-
-        // -----------------------
-        // 5️⃣ 최초 로드
-        // -----------------------
         if (!initialized) {
             initialized = true
             reloadUserInfo()

@@ -43,7 +43,6 @@ fun WorkoutCompleteScreen(
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                // TODO: 사용자에게 오류 알림 가능
             }
         }
     }

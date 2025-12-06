@@ -1,17 +1,8 @@
 package com.example.myfirstkotlinapp
 
-import android.content.Context
 import android.widget.Toast
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 import com.example.myfirstkotlinapp.ui.model.SignupRequestDto
 import com.example.myfirstkotlinapp.network.RetrofitClient
@@ -50,7 +41,7 @@ fun SignupScreen(onSignupSuccess: (Int) -> Unit) {
                         val body = response.body()
                         if (body != null) {
                             Toast.makeText(context, "회원가입 성공!", Toast.LENGTH_SHORT).show()
-                            onSignupSuccess(body.id)
+                            onSignupSuccess(body.id) // userId 넘겨주기.
                         } else {
                             Toast.makeText(context, "응답이 비어 있습니다.", Toast.LENGTH_SHORT).show()
                         }

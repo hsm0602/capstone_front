@@ -1,15 +1,11 @@
 package com.example.myfirstkotlinapp.network
 
-import com.example.myfirstkotlinapp.ui.model.ExerciseDto
-import com.example.myfirstkotlinapp.ui.model.ExerciseRecordCreateDto
 import com.example.myfirstkotlinapp.ui.model.ExerciseRecordUpdateDto
-import com.example.myfirstkotlinapp.ui.model.PostRecordResponse
 import com.example.myfirstkotlinapp.ui.model.UserDto
 import com.example.myfirstkotlinapp.ui.model.ExerciseRecordDto
 import retrofit2.http.GET
 import retrofit2.http.Query
 import retrofit2.http.Body
-import retrofit2.http.Header
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -18,20 +14,6 @@ import com.example.myfirstkotlinapp.ui.model.WeeklyBodyCompositionResponse
 import com.example.myfirstkotlinapp.ui.model.CreateBodyCompositionRequest
 
 interface ExerciseApi {
-    // 운동 목록 get
-    @GET("exercises")
-    suspend fun getExercises(
-        @Query("muscle_group") muscleGroups: List<String>
-    ): List<ExerciseDto>
-
-    // 최초 운동 플랜 post
-    @POST("exercise_records/{user_id}/{exercise_id}")
-    suspend fun postExerciseRecord(
-        @Path("user_id") userId: Int,
-        @Path("exercise_id") exerciseId: Int,
-        @Body record: ExerciseRecordCreateDto
-    ): PostRecordResponse
-
     @PATCH("exercise_records/{record_id}")
     suspend fun patchExerciseRecord(
         @Path("record_id") recordId: Int,
@@ -53,13 +35,11 @@ interface ExerciseApi {
         @Query("metric") metric: String, // "weight" or "body_fat"
         @Query("days") days: Int = 7
     ): WeeklyBodyCompositionResponse
-    // ⚠️ 가정: 현재 토큰의 user 기준으로 최근 7일 기록을 반환
 
     @POST("body_composition")
     suspend fun createBodyComposition(
         @Body body: CreateBodyCompositionRequest
     ): Response<Void>
-    // ⚠️ 가정: 현재 토큰의 user 기준으로 BodyComposition 한 건 추가
 
 
     @POST("plan/generate-and-save")

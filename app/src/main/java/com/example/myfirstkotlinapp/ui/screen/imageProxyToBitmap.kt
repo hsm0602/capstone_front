@@ -1,4 +1,4 @@
-package com.example.myfirstkotlinapp.ui
+package com.example.myfirstkotlinapp.ui.screen
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory

@@ -8,23 +8,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidViewBinding
 import com.example.myfirstkotlinapp.databinding.ActivityGoalSettingBinding
 import com.example.myfirstkotlinapp.ui.theme.MyFirstKotlinAppTheme
-
 import android.app.Activity
 import android.widget.Toast
 import androidx.compose.runtime.rememberCoroutineScope
 import com.example.myfirstkotlinapp.network.RetrofitClient
 import kotlinx.coroutines.launch
-import android.content.Intent
 
 class GoalSettingActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // 회원가입 이후 / 이전 페이지에서 넘겨준 userId 받기
         val userId = intent.getIntExtra("userId", -1)
 
-        // userId 못 받았으면 그냥 종료 (예외 상황 막기용)
         if (userId == -1) {
             finish()
             return
@@ -35,7 +30,6 @@ class GoalSettingActivity : ComponentActivity() {
                 GoalStateScreen(
                     userId = userId,
                     onUpdateSuccess = {
-                        // 현재 화면은 스택에서 제거
                         finish()
                     }
                 )
@@ -51,14 +45,11 @@ fun GoalSettingXmlScreen(
 ) {
 
     AndroidViewBinding(ActivityGoalSettingBinding::inflate) {
-        // this = ActivityGoalSettingBinding
 
-        // 뒤로가기
         backBtn.setOnClickListener {
             onBack()
         }
 
-        // 다음 버튼
         btnNext.setOnClickListener {
             val height = etHeight.text?.toString().orEmpty()
             val weight = etWeight.text?.toString().orEmpty()
@@ -78,14 +69,11 @@ fun GoalStateScreen(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
-    // XML 기반 화면을 그대로 사용
     GoalSettingXmlScreen(
         onBack = {
-            // 뒤로가기 버튼 눌렀을 때
             (context as? Activity)?.finish()
         },
         onNext = { heightStr, weightStr, bodyFatStr ->
-            // 문자열을 숫자로 변환
             val height = heightStr.toFloatOrNull()
             val weight = weightStr.toFloatOrNull()
             val pbf = bodyFatStr.toFloatOrNull()
@@ -95,7 +83,6 @@ fun GoalStateScreen(
                 return@GoalSettingXmlScreen
             }
 
-            // 코루틴으로 PATCH 요청
             scope.launch {
                 try {
                     val response = RetrofitClient.authApi.patchGoalState(

@@ -69,7 +69,7 @@
             android:windowSoftInputMode="adjustResize"/>
 
         <activity
-            android:name=".MyPageActivity"
+            android:name=".ui.screen.MyPageActivity"
             android:exported="false" />
 
         <activity

@@ -1,5 +1,3 @@
-// WorkoutSessionManager.kt (세트별 운동 및 휴식 시간 기록 포함)
-
 package com.example.myfirstkotlinapp.session
 
 import com.example.myfirstkotlinapp.ui.model.ExercisePlan
@@ -7,7 +5,7 @@ import com.example.myfirstkotlinapp.ui.model.ExerciseSet
 
 class WorkoutSessionManager(
     val plans: List<ExercisePlan>,
-    val recordIds: List<Int> // 세트별 recordId 저장
+    val recordIds: List<Int>
 ) {
     private var currentExerciseIndex = 0
     var currentSetIndex = 0
@@ -57,14 +55,6 @@ class WorkoutSessionManager(
             currentExerciseIndex++
             currentSetIndex = 0
         }
-
-        // 다음 세트가 있는 경우에만 새로운 SetTiming 생성
-//        if (!isFinished) {
-//            val recordId = recordIds.getOrNull(getFlatSetIndex()) ?: return
-//            _setTimings.add(SetTiming(recordId = recordId).apply {
-//                workoutStart = System.currentTimeMillis()
-//            })
-//        }
     }
 
     private fun getFlatSetIndex(): Int {
@@ -93,13 +83,11 @@ class WorkoutSessionManager(
         var exIdx = currentExerciseIndex
         var setIdx = currentSetIndex
 
-        // "지금 세트"가 방금 끝난 세트고, 휴식이 그 뒤에 시작되는 상태이므로
-        // NEXT는 (현재 세트 인덱스 + 1) 기준
         setIdx += 1
 
         val currentSets = plans[exIdx].sets
         if (setIdx >= currentSets.size) {
-            // 다음 운동으로 넘어감
+            // 다음 운동으로 넘어감.
             exIdx += 1
             if (exIdx >= plans.size) return null   // 다음 세트 없음 (전체 루틴 끝)
             setIdx = 0

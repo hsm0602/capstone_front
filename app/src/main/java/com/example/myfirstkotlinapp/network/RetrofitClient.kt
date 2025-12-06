@@ -12,10 +12,6 @@ object RetrofitClient {
             .build()
     }
 
-    val exerciseApi: ExerciseApi by lazy {
-        retrofit.create(ExerciseApi::class.java)
-    }
-
     val authApi: AuthApi by lazy {
         retrofit.create(AuthApi::class.java)
     }

@@ -12,29 +12,28 @@ object ExerciseLogic {
     private var lowFrameCount = 0
     private var highFrameCount = 0
     private var lastCountTime = 0L
-    private const val frameThreshold = 3
     private const val Cooldown = 500L
     private var Count = 0
 
-    // ===== [추가: Deadlift 전용 상태] =========================================
+    // Deadlift 전용 상태
     private var ddl_isDown = false
     private var ddl_lowFrames = 0
     private var ddl_highFrames = 0
     private var ddl_lastTime = 0L
 
-    // Deadlift 스무딩/사이클 추적용 상태 (전역)
+    // Deadlift 스무딩/사이클 추적용 상태
     private var ddl_smoothInit = false
     private var ddl_smoothDelta = 0f
     private var ddl_cycleMax = Float.NEGATIVE_INFINITY
     private var ddl_cycleMin = Float.POSITIVE_INFINITY
 
-    // ===== [추가: Crunch 전용 상태] ===========================================
+    // Crunch 전용 상태
     private var cr_isClosed = false
     private var cr_lowFrames = 0
     private var cr_highFrames = 0
     private var cr_lastTime = 0L
 
-    // ===== [추가: Elbow-to-Knee 전용 상태] ===================================
+    // Elbow-to-Knee 전용 상태
     private var e2k2_state = 0    // 0:첫쪽 NEAR, 1:첫쪽 FAR, 2:반대 NEAR, 3:반대 FAR
     private var e2k2_side = 0    // 0=(L elbow - R knee), 1=(R elbow - L knee)
     private var e2k2_init = false
@@ -42,7 +41,7 @@ object ExerciseLogic {
     private var e2k2_rl = 0.0
     private var e2k2_lastTime = 0L
 
-    // ---- Pike Push-up 전용 ----
+    // Pike Push-up 전용
     private var pike_isDown = false
     private var pike_lowFrames = 0
     private var pike_highFrames = 0
@@ -58,7 +57,7 @@ object ExerciseLogic {
     private fun distance2D(x1: Float, y1: Float, x2: Float, y2: Float): Double {
         val dx = (x1 - x2).toDouble()
         val dy = (y1 - y2).toDouble()
-        return kotlin.math.sqrt(dx * dx + dy * dy)
+        return sqrt(dx * dx + dy * dy)
     }
 
 
@@ -160,7 +159,6 @@ object ExerciseLogic {
         val currentTime = System.currentTimeMillis()
         val shoulderToWristDist = shoulderY - wristY
 
-        // 기준값은 실제 실험하며 조정 필요 (예: 0.07f, 0.13f)
         val upPose = shoulderToWristDist < 0.07f
         val downPose = shoulderToWristDist > 0.13f
 
@@ -308,7 +306,7 @@ object ExerciseLogic {
         val ankY = (lAnk.y() + rAnk.y()) / 2f
         val wristY = (lWr.y() + rWr.y()) / 2f
 
-        // Δy(손목-골반): 내려가면 커짐, 올라오면 작아짐
+        // 손목-골반: 내려가면 커짐, 올라오면 작아짐
         val rawDelta = wristY - hipY
 
         // EMA 스무딩
@@ -320,7 +318,7 @@ object ExerciseLogic {
             ddl_smoothDelta = alpha * rawDelta + (1f - alpha) * ddl_smoothDelta
         }
 
-        // 신체 스케일(힙→발목 세로거리)
+        // 신체 스케일(힙->발목 세로거리)
         val hipAnkle = (ankY - hipY).coerceAtLeast(0.05f)
 
         // 동적 임계값 (카메라 거리 보정)
@@ -339,7 +337,7 @@ object ExerciseLogic {
 
         val now = System.currentTimeMillis()
 
-        // 1) 다운 진입
+        // 다운 진입
         if (!ddl_isDown) {
             if (ddl_smoothDelta > downThr) {
                 ddl_lowFrames++
@@ -355,7 +353,7 @@ object ExerciseLogic {
             return false
         }
 
-        // 2) 업 완료 → +1
+        // 업 완료 -> +1
         val reachedUp = ddl_smoothDelta < upThr
         val romNow = (ddl_cycleMax - ddl_smoothDelta)
 
@@ -426,7 +424,7 @@ object ExerciseLogic {
             return false
         }
 
-        // 열림(이탈) → +1
+        // 열림(이탈) -> +1
         if (isFarNow) {
             cr_highFrames++
             if (cr_highFrames >= 2 && now - cr_lastTime > Cooldown) {
@@ -498,7 +496,7 @@ object ExerciseLogic {
                 }
                 return false
             }
-            3 -> { // 반대쪽 FAR → +1
+            3 -> { // 반대쪽 FAR -> +1
                 if (isFar(e2k2_side)) {
                     if (now - e2k2_lastTime > Cooldown) {
                         e2k2_lastTime = now      // 전용 쿨다운
@@ -517,7 +515,6 @@ object ExerciseLogic {
     fun countPikePushup(result: PoseLandmarkerResult): Boolean {
         val lm = result.landmarks().firstOrNull() ?: return false
 
-        // 필요한 랜드마크
         val nose = lm[0]
         val lEye = lm[2]; val rEye = lm[5]
         val lEar = lm[7]; val rEar = lm[8]
@@ -536,7 +533,7 @@ object ExerciseLogic {
         // 손목 높이(바닥 기준)
         val wristY = (lWr.y() + rWr.y()) / 2f
 
-        // ✅ 머리의 "가장 낮은 지점" (정수리 포함되도록 머리 부위 중 Y 최댓값 사용)
+        // 머리의 가장 낮은 지점 (정수리 포함되도록 머리 부위 중 Y 최댓값 사용)
         val headLowY = maxOf(
             nose.y(), lEye.y(), rEye.y(), lEar.y(), rEar.y(), mouthL.y(), mouthR.y()
         )
@@ -573,7 +570,7 @@ object ExerciseLogic {
             return false
         }
 
-        // ↑ Up(머리 상승/이탈) → +1
+        // ↑ Up(머리 상승/이탈) -> +1
         if (pike_vSmooth > upThr) {
             if (++pike_highFrames >= 3 && now - pike_lastTime > Cooldown) {
                 pike_lastTime = now
@@ -598,7 +595,7 @@ object ExerciseLogic {
         highFrameCount = 0
         lastCountTime = 0L
 
-        // ---- Deadlift 전용 ----
+        // Deadlift 전용
         ddl_isDown = false
         ddl_lowFrames = 0
         ddl_highFrames = 0
@@ -609,7 +606,7 @@ object ExerciseLogic {
         ddl_cycleMax = Float.NEGATIVE_INFINITY
         ddl_cycleMin = Float.POSITIVE_INFINITY
 
-        // ---- Crunch 전용 ----
+        // Crunch 전용
         cr_isClosed = false
         cr_lowFrames = 0
         cr_highFrames = 0
@@ -617,7 +614,7 @@ object ExerciseLogic {
         cr_smoothInit = false
         cr_dSmooth = 0.0
 
-        // ---- Elbow-to-Knee 전용 ----
+        // Elbow-to-Knee 전용
         e2k2_state = 0
         e2k2_side = 0
         e2k2_init = false
@@ -625,7 +622,7 @@ object ExerciseLogic {
         e2k2_rl = 0.0
         e2k2_lastTime = 0L
 
-        // ---- Pike Push-up 전용 ----
+        // Pike Push-up 전용
         pike_isDown = false
         pike_lowFrames = 0
         pike_highFrames = 0

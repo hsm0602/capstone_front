@@ -15,7 +15,7 @@ class SignupActivity : ComponentActivity() {
                     val intent = Intent(this, GoalSelectionActivity::class.java)
                     intent.putExtra("userId", userId)
                     startActivity(intent)
-                    finish() // 회원가입 성공 후 현재 액티비티 종료 (필요시 로그인 화면으로 이동)
+                    finish()
                 }
             }
         }

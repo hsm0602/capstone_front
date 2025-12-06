@@ -1,7 +1,5 @@
 package com.example.myfirstkotlinapp.ui.model
 
-import java.util.UUID
-
 // 운동 1개 (ex: 스쿼트)
 data class ExercisePlan(
     val id: Int,
@@ -11,7 +9,7 @@ data class ExercisePlan(
 
 // 세트 1개 (ex: 60kg 10회)
 data class ExerciseSet(
-    val weight: Int,    // 중량 (kg)
-    val reps: Int,      // 횟수
+    val weight: Int,
+    val reps: Int,
     val isCompleted: Boolean
 )

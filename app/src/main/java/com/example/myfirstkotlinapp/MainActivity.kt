@@ -3,7 +3,6 @@ package com.example.myfirstkotlinapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.example.myfirstkotlinapp.ui.screen.MainScreen
 import com.example.myfirstkotlinapp.ui.screen.WorkoutScreen
 import com.example.myfirstkotlinapp.ui.theme.MyFirstKotlinAppTheme
 

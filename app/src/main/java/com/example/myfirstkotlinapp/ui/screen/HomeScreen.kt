@@ -18,16 +18,13 @@ import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 import android.view.View
-import android.widget.TextView
 import android.widget.LinearLayout
 import java.util.Calendar
 import android.content.Intent
-import com.example.myfirstkotlinapp.MyPageActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @Composable
 fun HomeScreen(
@@ -37,7 +34,6 @@ fun HomeScreen(
     val context = LocalContext.current
     val todayDate by remember { mutableStateOf(Date()) }
 
-    // 백엔드에서 가져온 데이터 보관용 상태
     var plans by remember { mutableStateOf<List<ExercisePlan>>(emptyList()) }
     var recordIds by remember { mutableStateOf<List<Int>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
@@ -45,6 +41,7 @@ fun HomeScreen(
 
     val scope = rememberCoroutineScope()
 
+    // 운동 목록 생성 함수.
     fun reloadPlans() {
         scope.launch {
             try {
@@ -107,37 +104,30 @@ fun HomeScreen(
         }
     }
 
-    // 1) HomeScreen에 들어오자마자 운동 기록 불러오기
     LaunchedEffect(Unit) {
         reloadPlans()
     }
 
-    // 2) XML ↔ Compose 바인딩
     AndroidViewBinding(
         modifier = modifier,
         factory = HomeScreenBinding::inflate
     ) {
-        // 여기서 this == HomeScreenBinding
 
-        // 오류가 있으면 간단하게 Toast (원하면 Text로 화면에 표시해도 됨)
         errorMessage?.let { msg ->
             Toast.makeText(root.context, msg, Toast.LENGTH_SHORT).show()
         }
 
+        // 마이 페이지.
         btnProfile.setOnClickListener {
             val intent = Intent(root.context, MyPageActivity::class.java)
             root.context.startActivity(intent)
         }
 
-        // 로딩 상태면 나중에 ProgressBar 등을 연결해도 됨
-        // ex) progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-
         // 달력 바인딩 (오늘 기준)
         bindCalendar(todayDate)
 
-        // 예: tvExerciseTitle1.text = exercisePlans.getOrNull(0)?.name ?: "운동 1"
         if (plans.isEmpty()) {
-            // 루틴 없음 → "루틴 생성하기" 카드만 보이기
+            // 루틴 없을 때.
             routineCardContainer.visibility = View.GONE
             createRoutineCard.visibility = View.VISIBLE
 
@@ -146,11 +136,11 @@ fun HomeScreen(
                 root.context.startActivity(intent)
             }
         } else {
-            // 루틴 있음 → 루틴 카드 보여주기
+            // 루틴 있을 때.
             routineCardContainer.visibility = View.VISIBLE
             createRoutineCard.visibility = View.GONE
 
-            // 카드 내용 채우기
+            // 카드 내용 채우기.
             bindPlansToCards(plans)
 
             btnPlayRoutine.setOnClickListener {
@@ -164,20 +154,13 @@ fun HomeScreen(
     }
 }
 
-/**
- * 서버에서 받은 ExerciseRecordDto 리스트를
- * 화면/세션에서 사용할 ExercisePlan 리스트와 recordIds 리스트로 변환.
- *
- * - 같은 exerciseId 끼리 하나의 ExercisePlan으로 묶는다.
- * - recordIds는 WorkoutSessionManager 에 넘겨서 세트별 PATCH 등에 사용.
- */
+// DB 운동 목록 레코드를 plan과 id로 분리하는 함수.
 fun mapRecordsToPlans(
     records: List<ExerciseRecordDto>
 ): Pair<List<ExercisePlan>, List<Int>> {
 
     // exerciseId 기준으로 그룹핑
     val grouped: Map<Int, List<ExerciseRecordDto>> = records.groupBy { it.exerciseId }
-    // groupBy는 LinkedHashMap을 쓰기 때문에 "처음 등장한 순서"가 유지됨
 
     val plans: List<ExercisePlan> = grouped.map { (exerciseId, recordList) ->
         ExercisePlan(
@@ -185,7 +168,7 @@ fun mapRecordsToPlans(
             name = recordList.firstOrNull()?.exerciseName ?: "알 수 없는 운동",
             sets = recordList.map { dto ->
                 ExerciseSet(
-                    weight = dto.weight.toInt(),   // 필요하면 Float로 바꿔도 됨
+                    weight = dto.weight.toInt(),
                     reps = dto.reps,
                     isCompleted = dto.isCompleted
                 )
@@ -200,16 +183,16 @@ fun mapRecordsToPlans(
     return plans to recordIds
 }
 
+// 카드 내에서 운동 진행도를 채우는 함수.
 private fun setProgressBar(
     container: LinearLayout,
     completedCount: Int,
     totalCount: Int
 ) {
     if (totalCount <= 0) {
-        // 세트가 없는 경우 모두 회색
         for (i in 0 until container.childCount) {
             val segment = container.getChildAt(i)
-            segment.setBackgroundColor(0xFFE9E9E9.toInt()) // #E9E9E9
+            segment.setBackgroundColor(0xFFE9E9E9.toInt()) // 연회색
         }
         return
     }
@@ -221,13 +204,14 @@ private fun setProgressBar(
     for (i in 0 until segmentCount) {
         val segment = container.getChildAt(i)
         if (i < filledSegments) {
-            segment.setBackgroundColor(0xFF2260FF.toInt()) // 파란색 #2260FF
+            segment.setBackgroundColor(0xFF2260FF.toInt()) // 파란색
         } else {
-            segment.setBackgroundColor(0xFFE9E9E9.toInt()) // 연회색 #E9E9E9
+            segment.setBackgroundColor(0xFFE9E9E9.toInt()) // 연회색
         }
     }
 }
 
+// 카드 내에 운동 목록을 넣는 함수.
 fun HomeScreenBinding.bindPlansToCards(plans: List<ExercisePlan>) {
 
     val cards = listOf(
@@ -265,7 +249,7 @@ fun HomeScreenBinding.bindPlansToCards(plans: List<ExercisePlan>) {
             // "완료세트 / 전체세트"
             setCountView.text = "$completedCount / ${plan.sets.size}"
 
-            // "15회 X N세트" (첫 세트 기준)
+            // "N회 X N세트"
             val firstSet = plan.sets.firstOrNull()
             setInfoView.text = if (firstSet != null) {
                 "${firstSet.reps}회 X ${plan.sets.size}세트"
@@ -273,7 +257,7 @@ fun HomeScreenBinding.bindPlansToCards(plans: List<ExercisePlan>) {
                 "${plan.sets.size}세트"
             }
 
-            // 🔥 진행도 바 색칠
+            // 진행도 바 색칠
             setProgressBar(
                 container = progressContainer,
                 completedCount = completedCount,
@@ -283,23 +267,19 @@ fun HomeScreenBinding.bindPlansToCards(plans: List<ExercisePlan>) {
     }
 }
 
+// 오늘 날짜를 기준으로 주간 달력을 만드는 함수.
 fun HomeScreenBinding.bindCalendar(today: Date) {
     val tz = TimeZone.getTimeZone("Asia/Seoul")
 
-    // 오늘 날짜 기준 Calendar
     val todayCal = Calendar.getInstance(tz).apply {
         time = today
-        // 필요하면 firstDayOfWeek 설정도 가능
-        // firstDayOfWeek = Calendar.MONDAY
     }
 
-    // 오늘 기준으로 앞뒤 3일 = 총 7일 보여주기 (원하는대로 조정 가능)
     val startCal = Calendar.getInstance(tz).apply {
         time = today
         add(Calendar.DAY_OF_MONTH, -3)
     }
 
-    // 7칸(앞뒤 3일 + 오늘) 컨테이너와 텍스트 뷰 리스트
     val dayContainers = listOf(
         dayItem1, dayItem2, dayItem3, dayItem4, dayItem5, dayItem6, dayItem7
     )
@@ -323,13 +303,11 @@ fun HomeScreenBinding.bindCalendar(today: Date) {
                     cal.get(Calendar.DAY_OF_MONTH) == todayCal.get(Calendar.DAY_OF_MONTH)
 
         if (isToday) {
-            // 오늘: 까만 배경 + 흰 글씨 (기존 15번 스타일)
-            container.setBackgroundColor(0xFF303437.toInt())   // #303437
-            textView.setTextColor(0xFFF2F4F5.toInt())          // #F2F4F5
+            container.setBackgroundColor(0xFF303437.toInt())
+            textView.setTextColor(0xFFF2F4F5.toInt())
         } else {
-            // 나머지: 투명 배경 + 회색 글씨
-            container.setBackgroundColor(0x00000000)           // 투명
-            textView.setTextColor(0xFF979C9E.toInt())          // #979C9E
+            container.setBackgroundColor(0x00000000)
+            textView.setTextColor(0xFF979C9E.toInt())
         }
     }
 }

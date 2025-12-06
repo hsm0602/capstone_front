@@ -18,9 +18,7 @@ class GoalSelectionActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // ✅ 회원가입에서 넘겨준 userId 받기
-        //   → SignupActivity 에서 putExtra("userId", userId) 로 넣어줘야 함
-        val userId = intent.getIntExtra("userId", -1)
+        val userId = intent.getIntExtra("userId", -1) // userId 넘겨 받기.
 
         if (userId == -1) {
             Toast.makeText(this, "userId 가 전달되지 않았습니다.", Toast.LENGTH_SHORT).show()
@@ -33,16 +31,13 @@ class GoalSelectionActivity : ComponentActivity() {
                 GoalSelectionXmlScreen(
                     userId = userId,
                     onGoalSelectedAndSaved = { userId ->
-                        // ✅ 목표까지 서버에 저장이 끝난 뒤에만 다음 화면으로 이동
-                        //    다음 화면 이름은 팀에서 정한 Activity 로 교체
                         val next = Intent(
                             this@GoalSelectionActivity,
                             SurveyActivity::class.java
                         )
                         next.putExtra("userId", userId)
-                        // 굳이 goal 이나 userId 를 들고 다닐 필요 없으면 extra 안 넣어도 됨
                         startActivity(next)
-                        finish()  // 이 화면은 스택에서 제거
+                        finish()
                     }
                 )
             }
@@ -60,12 +55,11 @@ fun GoalSelectionXmlScreen(
 
     AndroidViewBinding(ActivityGoalSelectionBinding::inflate) {
 
-        // ⬅️ 뒤로가기
         backBtn.setOnClickListener {
             (context as? GoalSelectionActivity)?.finish()
         }
 
-        // 공통 클릭 처리 함수: goalString 하나만 다르게 넣어줌
+        // 공통 클릭 처리 함수.
         fun handleClick(goalString: String) {
             coroutineScope.launch {
                 try {
@@ -75,8 +69,7 @@ fun GoalSelectionXmlScreen(
                     )
 
                     if (response.isSuccessful) {
-                        // ✅ 서버에 정상 저장되었으니 상위 콜백 호출 → 다음 화면으로 이동
-                        onGoalSelectedAndSaved(userId)
+                        onGoalSelectedAndSaved(userId) // userId 넘겨주기.
                     } else {
                         Toast.makeText(
                             context,
@@ -94,7 +87,7 @@ fun GoalSelectionXmlScreen(
             }
         }
 
-        // ⬇️ 3개 버튼 각각에서 다른 goalString 만 넘겨줌
+        // 선택한 goalString 넘겨주기.
         btnGoalFatLoss.setOnClickListener   { handleClick("FAT_LOSS") }
         btnGoalMuscleGain.setOnClickListener { handleClick("MUSCLE_GAIN") }
         btnGoalEndurance.setOnClickListener  { handleClick("ENDURANCE") }
