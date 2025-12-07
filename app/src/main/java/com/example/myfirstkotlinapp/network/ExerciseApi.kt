@@ -14,7 +14,7 @@ import com.example.myfirstkotlinapp.ui.model.WeeklyBodyCompositionResponse
 import com.example.myfirstkotlinapp.ui.model.CreateBodyCompositionRequest
 
 interface ExerciseApi {
-    @PATCH("exercise_records/{record_id}")
+    @PATCH("exercise/records/{record_id}")
     suspend fun patchExerciseRecord(
         @Path("record_id") recordId: Int,
         @Body data: ExerciseRecordUpdateDto
