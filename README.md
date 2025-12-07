@@ -53,5 +53,5 @@ AndroidProject/
 │   │   │   │   ├── drawable/
 │   │   │   │   │   └── *.xml # 아이콘, 버튼 배경 등 그래픽 리소스 정의
 │   │   │   ├── assets/
-│   │   │   │   └── pose_landmaker_lite.task # poselandmaker 헬퍼에서 사용할 모델(lite버전)
+│   │   │   │   └── pose_landmaker_lite.task # poselandmaker 모델(lite버전)
 ```
