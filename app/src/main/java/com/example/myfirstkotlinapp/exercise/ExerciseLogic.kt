@@ -247,9 +247,9 @@ object ExerciseLogic {
         val currentTime = System.currentTimeMillis()
 
         // 다리가 올라간 상태 (각도가 작을 때 - 다리가 몸통에 가까워짐)
-        val legsUp = avgLegAngle < 100.0
+        val legsUp = avgLegAngle < 120.0
         // 다리가 내려간 상태 (각도가 클 때)
-        val legsDown = avgLegAngle > 140.0
+        val legsDown = avgLegAngle > 150.0
 
         if (legsUp) {
             lowFrameCount++
