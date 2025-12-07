@@ -1,3 +1,5 @@
+## 디렉토리 구조/설명
+
 ```
 AndroidProject/
 ├── app/
